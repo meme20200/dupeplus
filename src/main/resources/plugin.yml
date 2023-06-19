@@ -1,0 +1,18 @@
+name: DupePlus
+main: com.galaxydevnetwork.Bukkit.BukkitDupePlus
+version: 1.0.0
+description: The Plugin that turns your server into a Dupe Server
+author: meme20200
+api-version: 1.17
+authors:
+  - GalaxyDevNetwork
+  - GalaxyDevel0per
+commands:
+  dupe:
+    description: The command that duplicates your items
+    usage: "/<command> [timings]"
+    aliases:
+      - duplicate
+  dupeplus:
+    description: The plugin's command
+    usage: "/<command> [reload]"

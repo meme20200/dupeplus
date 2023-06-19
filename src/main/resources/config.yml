@@ -1,0 +1,66 @@
+# The command's settings
+# Message Variables
+# %dupe_item% = The Duplicated item
+# %prefix% = The default prefix or the prefix you set
+# %max% = The maximum
+# %min% = The minimum
+
+# Use this website to help you customize your messages
+# https://webui.advntr.dev
+dupe:
+  # The prefix for you to use
+  prefix: "<green>DupePlus</green>"
+
+  # Make it false to let everyone allowed to use this command (Default: false)
+  # Permission: dupeplus.dupe
+  permission: false
+
+  # The message sent to the player when try to execute dupe or reloadconfig no permission (Only if the above is true) (Default: "%prefix% <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>")
+  permission-message: "%prefix% <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"
+
+  # Leave blank for no message (Default: "%prefix% <dark_gray>|</dark_gray> <gray>Duped %dupe_item%</gray>")
+  # Allowed Message Variables: %prefix%, %dupe_item%
+  message: "%prefix% <dark_gray>|</dark_gray> <gray>Duped %dupe_item%</gray>"
+
+  # The message sent whenever the player tries to dupe nothing (Air) (Default: "")
+  # Leave blank for no message
+  duping-nothing-message: ""
+
+  # When using /dupe, in which hand will it dupe? (Default: MainHand)
+  # OffHand
+  # MainHand
+  dupe-on: MainHand
+
+  # Message to the sender if they try to dupe as a non-player (Default: "DupePlus | You can't do that!")
+  console-message: "DupePlus | You can't do that!"
+
+  # Settings for this (ignore if you don't want this) players can still run /dupe
+  # /dupe <times>
+  times:
+    # Make it false to disable this feature, make it true to enable this feature (Default: false)
+    enabled: false
+
+    # 0 for no maximum amount of times the player can run (Default: 5) (Recommended: 5)
+    # Permission to let a player/group have no maximum regardless of this option: dupeplus.times.max.unlimited
+    max: 5
+
+    # If the player puts the value above the maximum then what's the message? (Default: "%prefix% <dark_gray>|</dark_gray> <red>This is higher than maximum! Do something lower than %max%</red>")
+    # Allowed message variable: %prefix%, %max%, %min%
+    max-message: "%prefix% <dark_gray>|</dark_gray> <red>This is higher than maximum! Do something lower than %max%</red>"
+
+    # 0 for no minimum amount of times the player can run (Default: 0) (Recommended: 0)
+    # Permission to let a player/group have no minimum regardless of this option: dupeplus.times.min.unlimited
+    min: 0
+
+    # If the player puts the value below the minimum (Default: "%prefix% <dark_gray>|</dark_gray> <red>This is lower than minimum! Do something higher than %min%</red>")
+    # Allowed message variable: %prefix%, %max%, %min%
+    min-message: "%prefix% <dark_gray>|</dark_gray> <red>This is lower than minimum! Do something higher than %min%</red>"
+
+    # Make it false to let everyone allowed to use this command (Default: false)
+    # Permission: dupeplus.times
+    permission: false
+
+# Don't do anything with this.
+# Editing this will crash the plugin
+# config-version: 1.0
+config-version: 1.0
