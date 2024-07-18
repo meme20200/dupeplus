@@ -30,14 +30,18 @@ public class BukkitDupePlusCommand implements CommandExecutor {
         }
         Player player = (Player) commandSender;
         Audience audience = getPlugin().adventure().player(player);
-        if (strings[0].equals("reload")) {
-            if (player.hasPermission("dupeplus.admin.reloadconfig")) {
-                BukkitConfigyml.reloadConfig();
-                audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <green>Reloaded the config!</green>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
+        if (!(strings.length == 0)) {
+            if (strings[0].equals("reload")) {
+                if (player.hasPermission("dupeplus.admin.reloadconfig")) {
+                    BukkitConfigyml.reloadConfig();
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <green>Reloaded the config!</green>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
+                } else {
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>You have no permission!</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
+                }
+                return true;
             } else {
-                audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>You have no permission!</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
+                audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <white>- Reload</white>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
             }
-            return true;
         } else {
             audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <white>- Reload</white>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
         }
