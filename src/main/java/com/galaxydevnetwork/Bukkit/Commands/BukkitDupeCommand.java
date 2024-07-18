@@ -23,6 +23,12 @@ public class BukkitDupeCommand implements CommandExecutor {
         Player player = (Player) commandSender;
         Audience p = getPlugin().adventure().player(player);
 
+        // Checks if item is in blacklisted items
+        if (BukkitConfigyml.blacklistEnabled()) {
+            if (BukkitConfigyml.blacklistedItems().contains(BukkitConfigyml.getDupedItem(player).getType())) {
+                return BukkitConfigyml.blockedmessage(player);
+            }
+        }
         // Checks if permission is enabled or not.
         if (BukkitConfigyml.DupePermissionOption()) {
             if (!(BukkitConfigyml.hasDupePermission(player))) {
