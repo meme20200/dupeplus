@@ -29,6 +29,7 @@ public class BukkitDupePlus extends JavaPlugin {
     public void onEnable() {
         this.adventure = BukkitAudiences.create(this);
         plugin = this;
+        checkConfigVersion();
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         Objects.requireNonNull(getCommand("dupe")).setExecutor(new com.galaxydevnetwork.Bukkit.Commands.BukkitDupeCommand());
