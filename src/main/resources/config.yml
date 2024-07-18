@@ -34,6 +34,16 @@ dupe:
   # Message to the sender if they try to dupe as a non-player (Default: "DupePlus | You can't do that!")
   console-message: "DupePlus | You can't do that!"
 
+  blacklist:
+    # Make it false to disable this feature, make it true to enable this feature (Default: false)
+    enabled: false
+    # If the player tries to dupe an item that is in (Default: "%prefix% <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>")
+    # Allowed message variable: %prefix%, %dupe_item%
+    blocked-message: "%prefix% <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"
+    # Add or remove items to block them from being duped, also do not include spaces, for an example (NO: "diamond block" YES: "diamond_block")
+    items:
+      - barrier
+
   # Settings for this (ignore if you don't want this) players can still run /dupe
   # /dupe <times>
   times:
@@ -60,7 +70,7 @@ dupe:
     # Permission: dupeplus.times
     permission: false
 
-# Don't do anything with this.
-# Editing this will crash the plugin
-# config-version: 1.0
-config-version: 1.0
+# Don't edit this
+# Previous: 1.0
+# config-version: 1.1
+config-version: 1.1
