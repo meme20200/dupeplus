@@ -39,6 +39,18 @@ public class BukkitDupePlusCommand implements CommandExecutor {
                     audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>You have no permission!</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
                 }
                 return true;
+            } else if (strings[0].equals("blacklist")) {
+                if (player.hasPermission("dupeplus.admin.blacklist")) {
+                    if (!(strings.length == 1)) {
+                        BukkitConfigyml.config.getStringList("dupe.blacklist.items").add(strings[1]);
+                        BukkitConfigyml.reloadConfig();
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>Blacklisted %blacklist-item%</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix())).replaceAll("%blacklist-item%", strings[1])));
+                    } else {
+                        audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>Please add a item to blacklist</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
+                    }
+                } else {
+                    audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>You have no permission!</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
+                }
             } else {
                 audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <white>- Reload</white>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
             }
