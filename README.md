@@ -39,7 +39,7 @@ dupe:
   permission-message: "%prefix% <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"
 
   # Leave blank for no message (Default: "%prefix% <dark_gray>|</dark_gray> <gray>Duped %dupe_item%</gray>")
-  # Allowed Message Variables: %prefix%, %dupe_item%
+  # Allowed Message Variables: %prefix%, %raw_dupe_item%, %dupe_item%
   message: "%prefix% <dark_gray>|</dark_gray> <gray>Duped %dupe_item%</gray>"
 
   # The message sent whenever the player tries to dupe nothing (Air) (Default: "")
@@ -54,8 +54,9 @@ dupe:
   # Message to the sender if they try to dupe as a non-player (Default: "DupePlus | You can't do that!")
   console-message: "DupePlus | You can't do that!"
 
+  # Settings for blacklist
   blacklist:
-    # Make it false to disable this feature, make it true to enable this feature (Default: false)
+    # Make it false to disable the blacklist, make it true to enable it (Default: false)
     enabled: false
     # If the player tries to dupe an item that is in (Default: "%prefix% <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>")
     # Allowed message variable: %prefix%, %dupe_item%
@@ -63,6 +64,17 @@ dupe:
     # Add or remove items to block them from being duped, also do not include spaces, for an example (NO: "diamond block" YES: "diamond_block")
     items:
       - barrier
+
+  # Settings for the cooldown of /dupe
+  cooldown:
+    # Make it false to disable the cooldown, make it true to enable it. (Default: false)
+    enable: false
+    # How many seconds for the cooldowns to be.
+    seconds: 3
+    # If the player tries to dupe while the cooldown is set. (Default: "%prefix% <dark_gray>|</dark_gray> <red>Please wait %duration%.</red>")
+    # Allowed message variable: %prefix%, %duration%
+    wait-message: "%prefix% <dark_gray>|</dark_gray> <red>Please wait %duration%.</red>"
+
 
   # Settings for this (ignore if you don't want this) players can still run /dupe
   # /dupe <times>
@@ -92,7 +104,7 @@ dupe:
 
 # Checks for updates using the set API (Modrinth or SpigotMC),
 updates:
-  # Checks every 1 hour for updates, toggle off if you don't want to update the plugin often.
+  # Checks on startup for updates, disable if you do not wish to update DupePlus.
   checkupdate: true
 
   # Which Service should the Check Update use? (Default: Modrinth)
@@ -114,8 +126,6 @@ updates:
     # The message sent to the console (Default: "%prefix% | Update DupePlus at %link%")
     # Allowed message variable: %prefix%, %link%, %currentversion%, %newversion%
     console-notify-message: "%prefix% | Update DupePlus at %link%"
-
-
 
 # Don't edit this
 # Previous: 1.1
