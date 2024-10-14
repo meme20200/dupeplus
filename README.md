@@ -86,15 +86,47 @@ dupe:
     # Allowed message variable: %prefix%, %max%, %min%
     min-message: "%prefix% <dark_gray>|</dark_gray> <red>This is lower than minimum! Do something higher than %min%</red>"
 
+    # Make it false to let everyone allowed to use this command (Default: false)
+    # Permission: dupeplus.times
+    permission: false
+
+# Checks for updates using the set API (Modrinth or SpigotMC),
+updates:
+  # Checks every 1 hour for updates, toggle off if you don't want to update the plugin often.
+  checkupdate: true
+
+  # Which Service should the Check Update use? (Default: Modrinth)
+  # Modrinth
+  # SpigotMC
+  api: Modrinth
+
+  notify:
+    # Notify players with the permission to update the plugin to the latest version.
+    player-notify: true
+    # The message sent to everyone who has the permission (Default: "%prefix% <dark_gray>|</dark_gray> <white><green>DupePlus</green> is outdated, please update at: <blue>%link%</blue>")
+    # (Permission: dupeplus.updates.notify)
+    # Allowed message variable: %prefix%, %link%, %currentversion%, %newversion%
+    notify-message: "%prefix% <dark_gray>|</dark_gray> <white><green>DupePlus</green> is outdated, please update at: <blue>%link%</blue>"
+
+    # Send message to the console for the server owner to update the plugin.
+    console-notify: true
+
+    # The message sent to the console (Default: "%prefix% | Update DupePlus at %link%")
+    # Allowed message variable: %prefix%, %link%, %currentversion%, %newversion%
+    console-notify-message: "%prefix% | Update DupePlus at %link%"
+
+
+
 # Don't edit this
-# Previous: 1.0
-# config-version: 1.1
-config-version: 1.1
+# Previous: 1.1
+# config-version: 1.2
+config-version: 1.2
 ```
 </details>
 
 ## Features
-- (NEW) Blacklist [Block items from being duped]
+- Update Checker [Don't be living under a rock, new features that improve the Dupe System in your server]
+- Blacklist [Block items from being duped]
 - Times Support [Dupe the item several times.]
 - Dupe Hand [Change the item being duped, Off hand dupe or Main hand dupe]
 - Permission Dupe [Give certain groups or players /dupe by using a permission plugin like [LuckPerms](https://luckperms.net/)]

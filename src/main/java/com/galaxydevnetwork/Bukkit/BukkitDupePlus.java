@@ -3,9 +3,11 @@ package com.galaxydevnetwork.Bukkit;
 import com.galaxydevnetwork.Bukkit.Commands.BukkitDupePlusCommand;
 import com.galaxydevnetwork.Bukkit.TabCompletors.BukkitDupeCommandTabCompleter;
 import com.galaxydevnetwork.Bukkit.TabCompletors.BukkitDupePlusCommandTabCompleter;
+import com.galaxydevnetwork.Bukkit.Utilities.BukkitConfigyml;
+import com.galaxydevnetwork.Bukkit.Utilities.UpdateChecker;
+import com.galaxydevnetwork.Bukkit.events.NotifyJoinPlayer;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,9 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Objects;
 
+import static com.galaxydevnetwork.Bukkit.Utilities.BukkitConfigyml.isCheckUpdateAllowed;
+
 public class BukkitDupePlus extends JavaPlugin {
     private static BukkitDupePlus plugin;
     private BukkitAudiences adventure;
+    public static String version = "1.2";
 
     public @NotNull BukkitAudiences adventure() {
         if(this.adventure == null) {
@@ -29,6 +34,7 @@ public class BukkitDupePlus extends JavaPlugin {
     public void onEnable() {
         this.adventure = BukkitAudiences.create(this);
         plugin = this;
+        version = plugin.getDescription().getVersion();
         checkConfigVersion();
         getConfig().options().copyDefaults();
         saveDefaultConfig();
@@ -36,8 +42,25 @@ public class BukkitDupePlus extends JavaPlugin {
         Objects.requireNonNull(getCommand("dupe")).setTabCompleter(new BukkitDupeCommandTabCompleter());
         Objects.requireNonNull(getCommand("dupeplus")).setExecutor(new BukkitDupePlusCommand());
         Objects.requireNonNull(getCommand("dupeplus")).setTabCompleter(new BukkitDupePlusCommandTabCompleter());
-        Metrics metrics = new Metrics(this, 18772);
-        metrics.addCustomChart(new SimplePie("configversion", () -> "1.0"));
+
+
+        // Metrics metrics = new Metrics(this, 18772);
+        // metrics.addCustomChart(new SimplePie("configversion", () -> version));
+        if (isCheckUpdateAllowed()) {
+            new UpdateChecker(this, BukkitConfigyml.isSpigotMC()).getVersion(newversion -> {
+                if (!(BukkitDupePlus.version.equals(newversion))) {
+                    if (BukkitConfigyml.isPlayerNotifyAllowed()) {
+                        Bukkit.getServer().getPluginManager().registerEvents(new NotifyJoinPlayer(newversion), this);
+                    }
+                    if (BukkitConfigyml.isPlayerNotifyAllowed() || BukkitConfigyml.isConsoleNotifyAllowed()) {
+                        if (BukkitConfigyml.isConsoleNotifyAllowed()) {
+                            BukkitConfigyml.updateConsoleMessage(this, newversion);
+                        }
+                    }
+                }
+            });
+        }
+
     }
 
     @Override
@@ -53,7 +76,7 @@ public class BukkitDupePlus extends JavaPlugin {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         // Check if config-version is 1.0
-        if (config.getString("config-version", "1.1").equals("1.0")) {
+        if (config.getString("config-version", "1.2").equals("1.0") || config.getString("config-version", "1.2").equals("1.1")) {
             // Rename old config
 
             File oldConfigFile = new File(getDataFolder(), "old.config.yml");
