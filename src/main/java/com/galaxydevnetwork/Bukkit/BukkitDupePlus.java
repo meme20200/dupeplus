@@ -44,8 +44,8 @@ public class BukkitDupePlus extends JavaPlugin {
         Objects.requireNonNull(getCommand("dupeplus")).setTabCompleter(new BukkitDupePlusCommandTabCompleter());
 
 
-        // Metrics metrics = new Metrics(this, 18772);
-        // metrics.addCustomChart(new SimplePie("configversion", () -> version));
+        Metrics metrics = new Metrics(this, 18772);
+        metrics.addCustomChart(new SimplePie("configversion", () -> version));
         if (isCheckUpdateAllowed()) {
             new UpdateChecker(this, BukkitConfigyml.isSpigotMC()).getVersion(newversion -> {
                 if (!(BukkitDupePlus.version.equals(newversion))) {
