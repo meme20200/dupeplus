@@ -143,7 +143,7 @@ config-version: 1.2
 - Message customization [Customise the messages sent by the plugin, it's really useful for Servers that use for an example Spanish as their language instead of English]
  
 
-> Note: If you want a feature to be added, then please request the feature in the Github Repository Issues.
+> Note: If you want a feature to be added, then please request it in the Issues tab.
 
 
 ## Stats
@@ -167,3 +167,11 @@ Server Software this plugin supports and recommend to use: Bold & ^
 - **PaperMC^**
 - SpongeMC#
 - SpongeForge#
+
+## Upcoming 1.3.0
+- Replace Minecraft Item Type to Minecraft Item Identifier, TRIDENT -> minecraft:trident
+- %item_name% will show the item's display name
+- Support Custom Items like Oraxen and ItemsAdder
+- Support for Scripting Plugins like Denizen and Skript
+- Support for NBT Tag 1.20.4 and below: {"dupenotallowed": true}, 1.20.5 and above: \[minecraft:custom_data={dupenotallowed:true}]
+> Note: Please request features in the Issues Tab 
