@@ -138,12 +138,12 @@ config-version: 1.2
 - Update Checker [Don't be living under a rock, new features that improve the Dupe System in your server]
 - Blacklist [Block items from being duped]
 - Times Support [Dupe the item several times.]
-- Dupe Hand [Change the item being duped, Off hand dupe or Main hand dupe]
+- Dupe Hand [Change the item being duped, Offhand dupe or Main hand dupe]
 - Permission Dupe [Give certain groups or players /dupe by using a permission plugin like [LuckPerms](https://luckperms.net/)]
 - Message customization [Customise the messages sent by the plugin, it's really useful for Servers that use for an example Spanish as their language instead of English]
  
 
-> Note: If you want a feature to be added, then please request it in the Issues tab.
+> Note: If you want a feature added, please request it in the Issues tab.
 
 
 ## Stats
@@ -174,4 +174,5 @@ Server Software this plugin supports and recommend to use: Bold & ^
 - Support Custom Items like Oraxen and ItemsAdder
 - Support for Scripting Plugins like Denizen and Skript
 - Support for NBT Tag 1.20.4 and below: {"dupenotallowed": true}, 1.20.5 and above: \[minecraft:custom_data={dupenotallowed:true}]
+- Make a SpongeMC Plugin.
 > Note: Please request features in the Issues Tab 
