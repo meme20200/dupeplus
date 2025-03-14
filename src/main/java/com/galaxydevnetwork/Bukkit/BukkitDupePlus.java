@@ -7,6 +7,8 @@ import com.galaxydevnetwork.Bukkit.Utilities.BukkitConfigyml;
 import com.galaxydevnetwork.Bukkit.Utilities.UpdateChecker;
 import com.galaxydevnetwork.Bukkit.events.NotifyJoinPlayer;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,14 +16,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import static com.galaxydevnetwork.Bukkit.Utilities.BukkitConfigyml.config;
 import static com.galaxydevnetwork.Bukkit.Utilities.BukkitConfigyml.isCheckUpdateAllowed;
 
 public class BukkitDupePlus extends JavaPlugin {
     private static BukkitDupePlus plugin;
     private BukkitAudiences adventure;
-    public static String version = "1.2";
+    public static String version = "1.3.0";
+    public static boolean isItemsadderInstalled = false;
 
     public @NotNull BukkitAudiences adventure() {
         if(this.adventure == null) {
@@ -42,8 +48,6 @@ public class BukkitDupePlus extends JavaPlugin {
         Objects.requireNonNull(getCommand("dupe")).setTabCompleter(new BukkitDupeCommandTabCompleter());
         Objects.requireNonNull(getCommand("dupeplus")).setExecutor(new BukkitDupePlusCommand());
         Objects.requireNonNull(getCommand("dupeplus")).setTabCompleter(new BukkitDupePlusCommandTabCompleter());
-
-
         Metrics metrics = new Metrics(this, 18772);
         metrics.addCustomChart(new SimplePie("configversion", () -> version));
         if (isCheckUpdateAllowed()) {
@@ -51,6 +55,7 @@ public class BukkitDupePlus extends JavaPlugin {
                 if (!(BukkitDupePlus.version.equals(newversion))) {
                     if (BukkitConfigyml.isPlayerNotifyAllowed()) {
                         Bukkit.getServer().getPluginManager().registerEvents(new NotifyJoinPlayer(newversion), this);
+                        return;
                     }
                     if (BukkitConfigyml.isPlayerNotifyAllowed() || BukkitConfigyml.isConsoleNotifyAllowed()) {
                         if (BukkitConfigyml.isConsoleNotifyAllowed()) {
@@ -60,7 +65,7 @@ public class BukkitDupePlus extends JavaPlugin {
                 }
             });
         }
-
+        isItemsadderInstalled = (getServer().getPluginManager().getPlugin("ItemsAdder") != null && config.getBoolean("integrations.itemsadder", true));
     }
 
     @Override
@@ -74,11 +79,11 @@ public class BukkitDupePlus extends JavaPlugin {
     private void checkConfigVersion() {
         File configFile = new File(getDataFolder(), "config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        List<String> versions = new ArrayList<>(List.of("1.0", "1.1", "1.2"));
 
-        // Check if config-version is 1.0
-        if (config.getString("config-version", "1.2").equals("1.0") || config.getString("config-version", "1.2").equals("1.1")) {
+        // Check if config-version is 1.0, 1.1, 1.2
+        if (versions.contains(config.getString("config-version", "1.3"))) {
             // Rename old config
-
             File oldConfigFile = new File(getDataFolder(), "old.config.yml");
             if (oldConfigFile.exists()) {
                 oldConfigFile.delete();

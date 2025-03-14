@@ -1,9 +1,11 @@
 name: DupePlus
 main: com.galaxydevnetwork.Bukkit.BukkitDupePlus
-version: 1.2.0
-description: The Plugin that turns your server into a Dupe Server
+version: 1.3.0
+description: The plugin that turns your server into a Dupe Server.
 author: meme20200
 api-version: 1.17
+softdepend:
+  - ItemsAdder
 authors:
   - GalaxyDevNetwork
   - GalaxyDevel0per
