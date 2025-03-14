@@ -25,7 +25,7 @@ If you ever manage to break the `config.yml` or accidentally emptied the config.
 # %old_item_count% = The Item Count before dupe
 # %new_item_count% = The Item Count after dupe
 # %item_count% = Item Count
-# %prefix% = The Default prefix or the prefix you set
+# %prefix% = The default prefix or the prefix you set
 # %max% = The maximum
 # %min% = The minimum
 
@@ -115,8 +115,8 @@ dupe:
     max-values:
       pro: 10
       vip: 8
-      Default: 5 # Default permission or players without the permission who are using the dupe times.
-
+      default: 5 # Default permission or players without the permission who are using the dupe times.
+    
     # If the player puts the value above the maximum then what's the message? (Default: "%prefix% <dark_gray>|</dark_gray> <red>This is higher than maximum! Do something lower than %max%</red>")
     # Allowed message variable: %prefix%, %max%, %min%
     # Leave blank for no message
@@ -254,5 +254,4 @@ Server Software this plugin supports and recommend to use: Bold & ^
 
 ## Upcoming 1.3.1
 - [ ] Support PlaceholderAPI
-- [ ] 
 > Note: Please request features in the Issues Tab 
