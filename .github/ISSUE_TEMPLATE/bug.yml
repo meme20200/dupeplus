@@ -54,6 +54,5 @@ body:
       required: true
   - type: markdown
     attributes:
-      label: Details of the Bug
-      description: Put videos, images or anything that can describe the bug or what it does or what happens
+      value: Describe the Bug, put videos, images or anything that can describe the bug.
 
