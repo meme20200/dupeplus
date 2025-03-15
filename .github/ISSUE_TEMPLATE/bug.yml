@@ -54,9 +54,6 @@ body:
       required: true
   - type: markdown
     attributes:
-      value: Details of the Bug
-  - type: markdown
-    attributes:
-      value: >-
-        This template was generated with [Issue Forms
-        Creator](https://issue-forms-creator.netlify.app)
+      label: Details of the Bug
+      description: Put videos, images or anything that can describe the bug or what it does or what happens
+
