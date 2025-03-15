@@ -1,0 +1,62 @@
+name: Bug Report
+description: 'Report any bugs or any issues you have found while using the DupePlus Plugin. '
+title: '[BUG] '
+labels:
+  - bug
+body:
+  - type: dropdown
+    id: serverversion
+    attributes:
+      label: Server Version
+      description: The Minecraft Server Version running while using DupePlus.
+      options:
+        - 1.21.4
+        - 1.21.3 - 1.21.2
+        - 1.21.1 - 1.21
+        - 1.20.6 - 1.20.5
+        - 1.20.4 - 1.20.3
+        - 1.20.2
+        - 1.20.1 - 1.20
+        - 1.19.4
+        - 1.19.3
+        - 1.19.2
+        - 1.19.1
+        - '1.19'
+        - 1.18.2
+        - 1.18.1 - 1.18
+        - 1.17.1
+        - '1.17'
+    validations:
+      required: true
+  - type: textarea
+    id: stepstoreproduce
+    attributes:
+      label: How to reproduce?
+      description: Explain how to reproduce the bug.
+      placeholder: /dupe with no items on you.
+    validations:
+      required: true
+  - type: textarea
+    id: expectedresult
+    attributes:
+      label: Expected Result
+      description: What was supposed to happen?
+      placeholder: Sends the message
+    validations:
+      required: true
+  - type: textarea
+    id: actualresult
+    attributes:
+      label: Actual Result
+      description: What actually happened.
+      placeholder: An Error Message.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: Details of the Bug
+  - type: markdown
+    attributes:
+      value: >-
+        This template was generated with [Issue Forms
+        Creator](https://issue-forms-creator.netlify.app)
