@@ -1,6 +1,7 @@
 name: Bug Report
 description: 'Report any bugs or any issues you have found while using the DupePlus Plugin. '
 title: '[BUG] '
+type: bug
 labels:
   - bug
 body:
