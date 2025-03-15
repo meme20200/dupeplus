@@ -52,7 +52,11 @@ body:
       placeholder: An Error Message.
     validations:
       required: true
-  - type: markdown
-    attributes:
-      value: Describe the Bug, put videos, images or anything that can describe the bug.
+  - type: textarea
+      id: describingbug
+      attributes:
+        label: Describe the Bug
+        description: Use images, text or videos to describe the bug.
+      validations:
+        required: true
 
