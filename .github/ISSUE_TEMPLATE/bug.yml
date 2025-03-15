@@ -53,10 +53,10 @@ body:
     validations:
       required: true
   - type: textarea
-      id: describingbug
-      attributes:
-        label: Describe the Bug
-        description: Use images, text or videos to describe the bug.
-      validations:
-        required: true
+    id: describingbug
+    attributes:
+      label: Describe the Bug
+      description: Use images, text or videos to describe the bug.
+    validations:
+      required: true
 
