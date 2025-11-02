@@ -3,6 +3,9 @@
 
 The best duplication plugin for your Dupe Server. DupePlus provides you with a user-friendly configuration with comments that help you understand what each section means in the YML. It will also make your survival easier just by duplicating. Just send "/dupe" in chat!
 
+### Upcoming v1.4.1
+- [ ] `/dupeplus blacklist` or `/blacklist`: This command will make the item you are holding undupeable.
+
 ## Setup Guide
 
 ### Installation
