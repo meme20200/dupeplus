@@ -1,4 +1,4 @@
-package com.galaxydevnetwork.Bukkit.Utilities;
+package net.meme20200.Bukkit.Utilities;
 
 import java.time.Duration;
 import java.time.Instant;

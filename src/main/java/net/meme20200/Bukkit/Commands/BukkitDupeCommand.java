@@ -1,104 +1,150 @@
-package com.galaxydevnetwork.Bukkit.Commands;
+package net.meme20200.Bukkit.Commands;
 
-import com.galaxydevnetwork.Bukkit.Utilities.BukkitConfigyml;
-import com.galaxydevnetwork.Bukkit.Utilities.CooldownManager;
-import dev.lone.itemsadder.api.ItemsAdder;
+import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.Utilities.CooldownManager;
+import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
+import dev.jorel.commandapi.executors.CommandArguments;
+import dev.jorel.commandapi.executors.CommandExecutor;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.galaxydevnetwork.Bukkit.BukkitDupePlus.getPlugin;
+import static net.meme20200.Bukkit.BukkitDupePlus.getPlugin;
 
 public class BukkitDupeCommand implements CommandExecutor {
+
 
     private final CooldownManager cooldownManager = new CooldownManager();
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] args) {
+    public void run(CommandSender commandSender, CommandArguments commandArguments) throws WrapperCommandSyntaxException {
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage(BukkitConfigyml.ConsoleMessage());
-            return true;
+            return;
         }
         Player player = (Player) commandSender;
         Audience p = getPlugin().adventure().player(player);
 
+        // Checks if permission is enabled or not.
+        if (BukkitConfigyml.DupePermissionOption()) {
+            if (!(BukkitConfigyml.hasDupePermission(player))) {
+                BukkitConfigyml.DupeNoPermission(player);
+                return;
+            }
+        }
+
+        if (BukkitConfigyml.isWorldsEnabled()) {
+            if (BukkitConfigyml.getWorldsMode().equals("blacklist")) {
+                if (BukkitConfigyml.getWorlds().contains(player.getWorld().getName())) {
+                    BukkitConfigyml.WorldBlockedMessage(player);
+                    return;
+                }
+            } else if (BukkitConfigyml.getWorldsMode().equals("whitelist")) {
+                if (!BukkitConfigyml.getWorlds().contains(player.getWorld().getName())) {
+                    BukkitConfigyml.WorldBlockedMessage(player);
+                    return;
+                }
+            }
+        }
+
         ItemStack item = BukkitConfigyml.getDupedItem(player);
-        // Checks if item is in blacklisted items
 
         // Send message if Dupe message isn't empty
         if (item.getType() == Material.AIR) {
-            return BukkitConfigyml.dupingnothingmessage(player);
+            BukkitConfigyml.dupingnothingmessage(player);
+            return;
         }
 
-        if (BukkitConfigyml.blacklistEnabled()) {
-            // minecraft:
-            if (BukkitConfigyml.blacklistedItems().contains(item.getType())) {
-                return BukkitConfigyml.blockedmessage(player);
+        // Checks if item is in blacklisted items
+        if (BukkitConfigyml.listEnabled()) {
+            if (BukkitConfigyml.isblacklistEnabled()) {
+                // minecraft
+                if (BukkitConfigyml.listedItems().contains(item.getType())) {
+                    BukkitConfigyml.blockedmessage(player);
+                    return;
+                }
+                // itemsadder
+                if (BukkitConfigyml.CustomBlacklistItems(item)) {
+                    BukkitConfigyml.blockedmessage(player);
+                    return;
+                }
+                if (BukkitConfigyml.customBlacklistedNamespace(item)) {
+                    BukkitConfigyml.blockedmessage(player);
+                    return;
+                }
+            } else {
+                if (!BukkitConfigyml.listedItems().contains(item.getType())) {
+                    BukkitConfigyml.blockedmessage(player);
+                    return;
+                }
+                // itemsadder
+                if (!BukkitConfigyml.CustomBlacklistItems(item)) {
+                    BukkitConfigyml.blockedmessage(player);
+                    return;
+                }
+                if (!BukkitConfigyml.customBlacklistedNamespace(item)) {
+                    BukkitConfigyml.blockedmessage(player);
+                    return;
+                }
             }
-            // itemsadder
-            if (BukkitConfigyml.CustomBlacklistItems(item)) {
-                return BukkitConfigyml.blockedmessage(player);
-            }
+
         }
 
         if (BukkitConfigyml.isCooldownEnabled()) {
             if (cooldownManager.hasCooldown(player.getUniqueId())) {
-                return BukkitConfigyml.Cooldownmessage(player, formatDuration(cooldownManager.getRemainingCooldown(player.getUniqueId())));
+                BukkitConfigyml.Cooldownmessage(player, formatDuration(cooldownManager.getRemainingCooldown(player.getUniqueId())));
+                return;
             }
         }
         if (BukkitConfigyml.isCustomNBTAllowed()) {
             if (BukkitConfigyml.customNBTItem(player, item)) {
-                return BukkitConfigyml.customNBTItemMessage(player);
-            }
-        }
-        // Checks if permission is enabled or not.
-        if (BukkitConfigyml.DupePermissionOption()) {
-            if (!(BukkitConfigyml.hasDupePermission(player))) {
-                return BukkitConfigyml.DupeNoPermission(player);
+                BukkitConfigyml.customNBTItemMessage(player);
+                return;
             }
         }
         // Check if the time is enabled
-        if (BukkitConfigyml.timingsEnabled() && args.length >= 1) {
+        int times = (int) commandArguments.getOptional("times").orElse(0);
+        if (BukkitConfigyml.timingsEnabled() && times != 0) {
 
             if (BukkitConfigyml.TimesPermissionOption()) {
                 if (!(BukkitConfigyml.hasTimesPermission(player))) {
-                    return BukkitConfigyml.TimesNoPermission(player);
+                    BukkitConfigyml.TimesNoPermission(player);
+                    return;
                 }
             }
 
             try {
-                int a = Integer.parseInt(args[0]);
                 if (!(BukkitConfigyml.timesMax(player) == 0)) {
                     if (!(player.hasPermission("dupeplus.times.max.unlimited"))) {
-                        if (Integer.parseInt(args[0]) > BukkitConfigyml.timesMax(player)) {
-                            return BukkitConfigyml.timesMaxMessage(player);
+                        if (times > BukkitConfigyml.timesMax(player)) {
+                            BukkitConfigyml.timesMaxMessage(player);
+                            return;
                         }
                     }
                 }
                 if (!(BukkitConfigyml.timesMini() == 0)) {
                     if (!(player.hasPermission("dupeplus.times.min.unlimited"))) {
-                        if (Integer.parseInt(args[0]) < BukkitConfigyml.timesMini()) {
-                            return BukkitConfigyml.timesMiniMessage(player);
+                        if (times < BukkitConfigyml.timesMini()) {
+                            BukkitConfigyml.timesMiniMessage(player);
+                            return;
                         }
                     }
                 }
 
                 if (item.getType() == Material.AIR) {
-                    return BukkitConfigyml.dupingnothingmessage(player);
+                    BukkitConfigyml.dupingnothingmessage(player);
+                    return;
                 }
 
-                for (int i = 0; i < a; i++) {
+                for (int i = 0; i < times; i++) {
                     if (!BukkitConfigyml.isDupeMessageEmpty() &&
                             !BukkitConfigyml.OneTimeMessage()) {
                         p.sendMessage(BukkitConfigyml.DupeMessage(player));
@@ -113,11 +159,11 @@ public class BukkitDupeCommand implements CommandExecutor {
                 if (BukkitConfigyml.isCooldownEnabled()) {
                     cooldownManager.setCooldown(player.getUniqueId(), Duration.ofSeconds(BukkitConfigyml.cooldownSeconds()));
                 }
-                return true;
+                return;
             } catch (NumberFormatException e) {
                 Component a = BukkitConfigyml.getPrefix().append(MiniMessage.miniMessage().deserialize(" <dark_gray>|</dark_gray> <red>Enter a number next time!</red>"));
                 p.sendMessage(a);
-                return true;
+                return;
             }
         }
 
@@ -129,7 +175,6 @@ public class BukkitDupeCommand implements CommandExecutor {
         if (BukkitConfigyml.isCooldownEnabled()) {
             cooldownManager.setCooldown(player.getUniqueId(), Duration.ofSeconds(BukkitConfigyml.cooldownSeconds()));
         }
-        return true;
     }
 
     private void dupe(Player player, ItemStack item) {
@@ -161,4 +206,5 @@ public class BukkitDupeCommand implements CommandExecutor {
     private String plural(long num, String unit) {
         return num + " " + unit + (num == 1 ? "" : "s");
     }
+
 }

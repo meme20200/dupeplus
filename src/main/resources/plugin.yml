@@ -1,20 +1,30 @@
 name: DupePlus
-main: com.galaxydevnetwork.Bukkit.BukkitDupePlus
-version: 1.3.0
+main: net.meme20200.Bukkit.BukkitDupePlus
+version: 1.4.0
 description: The plugin that turns your server into a Dupe Server.
 author: meme20200
-api-version: 1.17
+api-version: "1.20"
 softdepend:
   - ItemsAdder
+  - PlaceholderAPI
 authors:
-  - GalaxyDevNetwork
   - GalaxyDevel0per
-commands:
-  dupe:
-    description: The command that duplicates your items
-    usage: "/<command> [timings]"
-    aliases:
-      - duplicate
-  dupeplus:
-    description: The plugin's command
-    usage: "/<command> [reload]"
+permissions:
+  dupeplus.admin.reloadconfig:
+    description: Allows the player to reload the configuration.
+    default: op
+  dupeplus.admin.blacklist:
+    description: Allows the player to reload the configuration.
+    default: op
+  dupeplus.times:
+    description: Allows the player to use the times
+    default: true
+  dupeplus.times.max.unlimited:
+    description: The player will have no limit when using /dupe [times]
+    default: false
+  dupeplus.dupe:
+    description: The player will be allowed to use /dupe
+    default: true
+  dupeplus.cooldown:
+    description: The player will need to wait a certain amount of seconds until the player can dupe.
+    default: true

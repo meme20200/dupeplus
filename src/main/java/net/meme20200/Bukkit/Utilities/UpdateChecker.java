@@ -1,4 +1,4 @@
-package com.galaxydevnetwork.Bukkit.Utilities;
+package net.meme20200.Bukkit.Utilities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

@@ -1,6 +1,6 @@
-package com.galaxydevnetwork.Bukkit.events;
+package net.meme20200.Bukkit.events;
 
-import com.galaxydevnetwork.Bukkit.Utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
