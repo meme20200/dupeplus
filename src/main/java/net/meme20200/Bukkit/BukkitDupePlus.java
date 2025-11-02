@@ -60,15 +60,15 @@ public class BukkitDupePlus extends JavaPlugin {
     }
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPISpigotConfig(this));
+        plugin = this;
+        CommandAPI.onLoad(new CommandAPIBukkitConfig(plugin).silentLogs(true));
     }
 
     @Override
     public void onEnable() {
         CommandAPI.onEnable();
 
-        this.adventure = BukkitAudiences.create(this);
-        plugin = this;
+        this.adventure = BukkitAudiences.create(plugin);
         version = plugin.getDescription().getVersion();
         checkConfigVersion();
         getConfig().options().copyDefaults();

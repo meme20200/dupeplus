@@ -64,7 +64,7 @@ dupe:
 
   # The message sent to the player when you duplicate an item. (Default: "<prefix> <dark_gray>|</dark_gray> <gray>Duped <item_name></gray>")
   # Allowed Message Variables: <prefix>, <item_type>, <item_name>, <old_item_count>, <new_item_count>
-  message: "<prefix> <dark_gray>|</dark_gray> <gray>Duped <item_name></gray>"
+  message: "<prefix> <dark_gray>|</dark_gray> <gray>Duped <white><item_name></gray>"
 
   # The message sent whenever the player tries to dupe nothing (Air) (Default: "")
   # Leave blank for no message

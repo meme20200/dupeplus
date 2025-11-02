@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.6.0</version>
                 <configuration>
                     <relocations>
                         <relocation>
@@ -49,9 +49,8 @@
                             <shadedPattern>net.meme20200</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>dev.jorel</pattern>
-                            <!-- Replace this with your package! -->
-                            <shadedPattern>net.meme20200</shadedPattern>
+                            <pattern>dev.jorel.commandapi</pattern>
+                            <shadedPattern>net.meme20200.commandapi</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -124,8 +123,8 @@
         </dependency>
         <dependency>
             <groupId>dev.jorel</groupId>
-            <artifactId>commandapi-spigot-shade</artifactId>
-            <version>11.0.0</version>
+            <artifactId>commandapi-bukkit-shade</artifactId>
+            <version>10.1.2</version>
         </dependency>
 
         <dependency>

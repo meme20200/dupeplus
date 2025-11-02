@@ -27,7 +27,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.3</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -50,8 +50,8 @@
               <shadedPattern>net.meme20200</shadedPattern>
             </relocation>
             <relocation>
-              <pattern>dev.jorel</pattern>
-              <shadedPattern>net.meme20200</shadedPattern>
+              <pattern>dev.jorel.commandapi</pattern>
+              <shadedPattern>net.meme20200.commandapi</shadedPattern>
             </relocation>
           </relocations>
         </configuration>

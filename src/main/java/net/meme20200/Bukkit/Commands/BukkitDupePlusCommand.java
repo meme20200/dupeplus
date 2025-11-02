@@ -15,7 +15,7 @@ import static net.meme20200.Bukkit.BukkitDupePlus.getPlugin;
 public class BukkitDupePlusCommand implements CommandExecutor {
     @Override
     public void run(CommandSender commandSender, CommandArguments commandArguments) throws WrapperCommandSyntaxException {
-        String argument = (String) commandArguments.getOptional("argument").orElse("");
+        String argument = (String) commandArguments.getOptional("option").orElse("");
         String item = (String) commandArguments.getOptional("item").orElse("");
 
         if (!(commandSender instanceof Player)) {
@@ -41,7 +41,6 @@ public class BukkitDupePlusCommand implements CommandExecutor {
                 } else {
                     audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>You have no permission!</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
                 }
-                return;
             } else if (argument.equals("blacklist")) {
                 if (player.hasPermission("dupeplus.admin.blacklist")) {
                     if (!(item.isEmpty())) {
