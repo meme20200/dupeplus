@@ -20,7 +20,7 @@
 # https://github.com/meme20200/dupeplus/issues
 dupe:
   # The prefix that is added before each message.
-  prefix: "<green>DupePlus</green>"
+  prefix: "<green>DupePlus</green> <dark_gray>|</dark_gray>"
 
   # Settings to change the Dupe Command into a Custom command.
   custom-command:
@@ -39,7 +39,7 @@ dupe:
     # Make it false to disable this feature.
     enabled: false
 
-    # Mode: whitelist, blacklist (Default:
+    # Mode: whitelist, blacklist (Default: blacklist)
     # whitelist will block all worlds but only allow /dupe in the worlds list.
     # blacklist will allow all worlds but block /dupe in the worlds list.
     mode: blacklist
@@ -47,7 +47,7 @@ dupe:
     # If the player tries to dupe in a blocked world. (Default: "<prefix> <dark_gray>|</dark_gray> <red>The world is banned from using /dupe!</red>")
     # Allowed message variable: <prefix>, <item_type>, <item_name>, <item_count>, <world>
     # Leave blank for no message
-    blocked-message: "<prefix> <dark_gray>|</dark_gray> <red>The world is banned from using /dupe!</red>"
+    blocked-message: "<prefix> <red>The world is banned from using /dupe!</red>"
 
     # Add or remove worlds to either block (blacklist) or allow (whitelist) it from players in the world from duping.
     worlds: []
@@ -60,11 +60,11 @@ dupe:
 
   # The message sent to the player when try to execute dupe or reloadconfig no permission (Only if the above is true) (Default: "<prefix> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>")
   # Leave blank for no message
-  permission-message: "<prefix> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"
+  permission-message: "<prefix> <red>You are not allowed to use this command</red>"
 
   # The message sent to the player when you duplicate an item. (Default: "<prefix> <dark_gray>|</dark_gray> <gray>Duped <item_name></gray>")
   # Allowed Message Variables: <prefix>, <item_type>, <item_name>, <old_item_count>, <new_item_count>
-  message: "<prefix> <dark_gray>|</dark_gray> <gray>Duped <white><item_name></gray>"
+  message: "<prefix> <gray>Duped <white><item_name></gray>"
 
   # The message sent whenever the player tries to dupe nothing (Air) (Default: "")
   # Leave blank for no message
@@ -77,7 +77,7 @@ dupe:
 
     # Allowed message variable: <prefix>, <item_type>, <item_name>, <item_count> (Default: "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>")
     # Leave blank for no message
-    blocked-message: "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"
+    blocked-message: "<prefix> <red>The item is blocked from being duped!</red>"
 
 
   # When using /dupe, in which hand will it dupe? (Default: MainHand)
@@ -94,8 +94,8 @@ dupe:
     enabled: false
 
     # Make it false to make it "whitelist", make it true to make it "blacklist" (Default: true)
-    # whitelist will block all items but only allow item duplication .
-    # blacklist will allow all worlds but block /dupe in the worlds list.
+    # whitelist will block all items but only allow duplicating items in the items list.
+    # blacklist will allow all items but block duplicating items in the items list.
     # Enabled must be true
     blacklist: true
 
@@ -105,7 +105,7 @@ dupe:
     # If the player tries to dupe an item that is in the blacklist or the item is not in the whitelist (Default: "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>")
     # Allowed message variable: <prefix>, <item_type>, <item_name>, <item_count>
     # Leave blank for no message
-    blocked-message: "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"
+    blocked-message: "<prefix> <red>The item is blocked from being duped!</red>"
 
     # Add or remove items to either block (blacklist) or allow (whitelist) them from being duped, also do not include spaces. (NO: "diamond block" YES: "diamond_block")
     # Begin the item's id with minecraft: to check the item's type only, it will ignore if the item is part of a custom plugin. (Default: - minecraft:barrier)
@@ -133,7 +133,7 @@ dupe:
     # If the player tries to dupe while the cooldown is set. (Default: "<prefix> <dark_gray>|</dark_gray> <red>Please wait <duration>.</red>")
     # Allowed message variable: <prefix>, <duration>
     # Leave blank for no message
-    wait-message: "<prefix> <dark_gray>|</dark_gray> <red>Please wait <duration>.</red>"
+    wait-message: "<prefix> <red>Please wait <duration>.</red>"
 
     # Make it true if you want players with the permission to ignore the cooldown, make it false if you want everyone to have cooldown. (Default: false)
     # Permission: dupeplus.cooldown
@@ -157,7 +157,7 @@ dupe:
     # If the player puts the value above the maximum then what's the message? (Default: "<prefix> <dark_gray>|</dark_gray> <red>This is higher than maximum! Do something lower than <max></red>")
     # Allowed message variable: <prefix>, <max>, <min>
     # Leave blank for no message
-    max-message: "<prefix> <dark_gray>|</dark_gray> <red>This is higher than maximum! Do something lower than <max></red>"
+    max-message: "<prefix> <red>This is higher than maximum! Do something lower than <max></red>"
 
     # 0 for no minimum amount of times the player can run (Default: 0) (Recommended: 0)
     # Permission to let a player/group have no minimum regardless of this option: dupeplus.times.min.unlimited
@@ -167,7 +167,7 @@ dupe:
     # If the player puts the value below the minimum (Default: "<prefix> <dark_gray>|</dark_gray> <red>This is lower than minimum! Do something higher than <min></red>")
     # Allowed message variable: <prefix>, <max>, <min>
     # Leave blank for no message
-    min-message: "<prefix> <dark_gray>|</dark_gray> <red>This is lower than minimum! Do something higher than <min></red>"
+    min-message: "<prefix> <red>This is lower than minimum! Do something higher than <min></red>"
 
     # Instead of sending the dupe message for every time it duplicates, it sends it one time to stop spam. (Default: true)
     one-time-message: true
@@ -216,14 +216,14 @@ updates:
     # The message sent to everyone who has the permission (Default: "<prefix> <dark_gray>|</dark_gray> <white><green>DupePlus</green> is outdated, please update at: <blue><link></blue>")
     # (Permission: dupeplus.updates.notify)
     # Allowed message variable: <prefix>, <link>, <currentversion>, <newversion>
-    notify-message: "<prefix> <dark_gray>|</dark_gray> <white><green>DupePlus</green> is outdated, please update at: <blue><link></blue>"
+    notify-message: "<prefix> <white><green>DupePlus</green> is outdated, please update at: <blue><link></blue>"
 
     # Send message to the console for the server owner to update the plugin.
     console-notify: true
 
     # The message sent to the console (Default: "<prefix> | Update DupePlus at <link>")
     # Allowed message variable: <prefix>, <link>, <currentversion>, <newversion>
-    console-notify-message: "<prefix> | Update DupePlus at <link>"
+    console-notify-message: "DupePlus | Update DupePlus at <link>"
 
 # Don't edit this
 # Previous: 1.3

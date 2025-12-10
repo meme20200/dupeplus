@@ -33,23 +33,23 @@ public class BukkitConfigyml {
         return config.getString("dupe.console-message", "DupePlus | You can't do that!");
     }
     public static void reloadConfig() {
-        if (isCustomCommandEnabled()) {
-            getPlugin().unregisterCommands(customCommandName());
+        String commandName;
+        if (BukkitConfigyml.isCustomCommandEnabled() & !BukkitConfigyml.customCommandName().isEmpty()) {
+            commandName = BukkitConfigyml.customCommandName();
         } else {
-            getPlugin().unregisterCommands("dupe");
-        }
-        if (!dupeAliases().isEmpty()) {
-            for (String a :
-                    dupeAliases()) {
-                getPlugin().unregisterCommands(a);
-            }
+            commandName = "dupe";
         }
         getPlugin().reloadConfig();
         config = getPlugin().getConfig();
-        if (isCustomCommandEnabled() & !customCommandName().isEmpty()) {
-            getPlugin().reloadCommand(customCommandName());
+        boolean check;
+        if (BukkitConfigyml.isCustomCommandEnabled() & !BukkitConfigyml.customCommandName().isEmpty()) {
+            check = !commandName.equals(BukkitConfigyml.customCommandName());
         } else {
-            getPlugin().reloadCommand("dupe");
+            check = !commandName.equals("dupe");
+        }
+        if (check) {
+            getPlugin().unregisterCommand(commandName);
+            getPlugin().getBukkitDupeCommand().registerCommand();
         }
     }
 
@@ -88,20 +88,55 @@ public class BukkitConfigyml {
         return config.getBoolean("dupe.list.blacklist", true);
     }
 
+    public static void setblacklistEnabled(boolean b) {
+        config.set("dupe.list.blacklist", b);
+    }
+
     public static List<Material> listedItems() {
-        List<String> blacklistItemsSTR = config.getStringList("dupe.blacklist.items");
+        List<String> blacklistItemsSTR = config.getStringList("dupe.list.items");
         List<Material> blacklistedItems = new ArrayList<>();
         for (String itemName : blacklistItemsSTR) {
             if (itemName.startsWith("minecraft:")) {
                 try {
                     Material material = Material.valueOf(itemName.replaceAll("minecraft:", "").toUpperCase());
                     blacklistedItems.add(material);
-                } catch (IllegalArgumentException e) {
-                    getPlugin().getLogger().warning("Invalid Minecraft Item name in config: " + itemName);
+                } catch (IllegalArgumentException ignored) {
                 }
             }
         }
         return blacklistedItems;
+    }
+
+    public static boolean removeItemfromlistedItems(Material toRemove) {
+        List<String> blacklistItemsSTR = config.getStringList("dupe.list.items");
+
+        String entry = "minecraft:" + toRemove.name().toLowerCase();
+
+        boolean removed = blacklistItemsSTR.remove(entry);
+        if (!removed) {
+            entry = "minecraft:" + toRemove.name().toUpperCase();
+            removed = blacklistItemsSTR.remove(entry);
+        }
+
+        if (removed) {
+            config.set("dupe.list.items", blacklistItemsSTR);
+            getPlugin().saveConfig();
+        }
+        return removed;
+    }
+
+    public static boolean addItemfromlistedItems(Material toAdd) {
+        List<String> list = new ArrayList<>(config.getStringList("dupe.list.items"));
+        String entry = "minecraft:" + toAdd.name().toLowerCase();
+
+        if (list.contains(entry)) {
+            return false;
+        }
+
+        list.add(entry);
+        config.set("dupe.list.items", list);
+        getPlugin().saveConfig();
+        return true;
     }
 
     public static boolean CustomBlacklistItems(ItemStack itemStack) {
@@ -208,7 +243,7 @@ public class BukkitConfigyml {
 
     public static boolean blockedmessage(@NotNull Player player, Audience p) {
         ItemStack item = getDupedItem(player);
-        Component a = format(player, config.getString("dupe.blacklist.blocked-message", "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"),
+        Component a = format(player, config.getString("dupe.list.blocked-message", "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"),
                 Placeholder.component("prefix", getPrefix()),
                 Placeholder.unparsed("item_name", itemStackName(item)),
                 Placeholder.unparsed("item_type", item.getType().name()),

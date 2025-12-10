@@ -1,6 +1,6 @@
 name: DupePlus
 main: net.meme20200.Bukkit.BukkitDupePlus
-version: 1.4.0
+version: 1.4.1
 description: The plugin that turns your server into a Dupe Server.
 author: meme20200
 api-version: "1.20"

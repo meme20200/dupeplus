@@ -37,7 +37,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>net.meme20200</mainClass>
+                  <mainClass>net.meme20200.Bukkit.BukkitDupePlus</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -50,8 +50,8 @@
               <shadedPattern>net.meme20200</shadedPattern>
             </relocation>
             <relocation>
-              <pattern>dev.jorel.commandapi</pattern>
-              <shadedPattern>net.meme20200.commandapi</shadedPattern>
+              <pattern>dev.triumphteam.gui</pattern>
+              <shadedPattern>net.meme20200.gui</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
@@ -82,6 +82,10 @@
     <repository>
       <id>placeholderapi</id>
       <url>https://repo.extendedclip.com/releases/</url>
+    </repository>
+    <repository>
+      <id>croabeast-repo</id>
+      <url>https://croabeast.github.io/repo/</url>
     </repository>
   </repositories>
   <dependencies>

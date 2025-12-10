@@ -2,34 +2,77 @@ package net.meme20200.Bukkit.Commands;
 
 import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
 import net.meme20200.Bukkit.Utilities.CooldownManager;
-import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
-import dev.jorel.commandapi.executors.CommandArguments;
-import dev.jorel.commandapi.executors.CommandExecutor;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
+import org.incendo.cloud.parser.standard.IntegerParser;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.meme20200.Bukkit.BukkitDupePlus.getPlugin;
+import static net.meme20200.Bukkit.Utilities.BukkitConfigyml.dupeAliases;
 
-public class BukkitDupeCommand implements CommandExecutor {
+public class BukkitDupeCommand {
 
+
+    public void registerCommand() {
+
+        if (BukkitConfigyml.isCustomCommandEnabled() & !BukkitConfigyml.customCommandName().isEmpty()) {
+            if (!dupeAliases().isEmpty()) {
+                getPlugin().getCommandManager().command(
+                        getPlugin().getCommandManager().commandBuilder(BukkitConfigyml.customCommandName(), Description.of("Dupe Command"), BukkitConfigyml.dupeAliases().toArray(new String[0]))
+                                .senderType(Player.class)
+                                .optional("times", IntegerParser.integerParser())
+                                .handler(this::executeCommand)
+                );
+            } else {
+                getPlugin().getCommandManager().command(
+                        getPlugin().getCommandManager().commandBuilder(BukkitConfigyml.customCommandName(), Description.of("Dupe Command"))
+                                .senderType(Player.class)
+                                .optional("times", IntegerParser.integerParser())
+                                .handler(this::executeCommand)
+                );
+            }
+        } else {
+            if (!dupeAliases().isEmpty()) {
+                getPlugin().getCommandManager().command(
+                        getPlugin().getCommandManager().commandBuilder("dupe", Description.of("Dupe Command"), BukkitConfigyml.dupeAliases().toArray(new String[0]))
+                                .senderType(Player.class)
+                                .optional("times", IntegerParser.integerParser())
+                                .handler(this::executeCommand)
+                );
+            } else {
+                getPlugin().getCommandManager().command(
+                        getPlugin().getCommandManager().commandBuilder("dupe", Description.of("Dupe Command"))
+                                .senderType(Player.class)
+                                .optional("times", IntegerParser.integerParser())
+                                .handler(this::executeCommand)
+                );
+            }
+        }
+    }
+
+    public void unregisterCommand() {
+        if (BukkitConfigyml.isCustomCommandEnabled() & !BukkitConfigyml.customCommandName().isEmpty()) {
+            getPlugin().getCommandManager().deleteRootCommand(BukkitConfigyml.customCommandName());
+        } else {
+            getPlugin().getCommandManager().deleteRootCommand("dupe");
+        }
+    }
 
     private final CooldownManager cooldownManager = new CooldownManager();
 
-    @Override
-    public void run(CommandSender commandSender, CommandArguments commandArguments) throws WrapperCommandSyntaxException {
-        if (!(commandSender instanceof Player player)) {
-            commandSender.sendMessage(BukkitConfigyml.ConsoleMessage());
-            return;
-        }
+    private void executeCommand(CommandContext<Player> context) {
+
+
+        Player player = context.sender();
         Audience p = getPlugin().adventure().player(player);
 
         // Checks if permission is enabled or not.
@@ -109,8 +152,9 @@ public class BukkitDupeCommand implements CommandExecutor {
                 return;
             }
         }
+
         // Check if the time is enabled
-        int times = (int) commandArguments.getOptional("times").orElse(0);
+        int times = context.getOrDefault("times", 0);
         if (BukkitConfigyml.timingsEnabled() && times != 0) {
 
             if (BukkitConfigyml.TimesPermissionOption()) {

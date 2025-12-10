@@ -1,65 +1,118 @@
 package net.meme20200.Bukkit.Commands;
 
-import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
-import dev.jorel.commandapi.exceptions.WrapperCommandSyntaxException;
-import dev.jorel.commandapi.executors.CommandArguments;
-import dev.jorel.commandapi.executors.CommandExecutor;
-import net.kyori.adventure.audience.Audience;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.command.CommandSender;
+import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
+
+import net.kyori.adventure.audience.Audience;
+import net.meme20200.Bukkit.menus.BlocklistMenu;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.description.Description;
 
 import static net.meme20200.Bukkit.BukkitDupePlus.getPlugin;
 
-public class BukkitDupePlusCommand implements CommandExecutor {
-    @Override
-    public void run(CommandSender commandSender, CommandArguments commandArguments) throws WrapperCommandSyntaxException {
-        String argument = (String) commandArguments.getOptional("option").orElse("");
-        String item = (String) commandArguments.getOptional("item").orElse("");
 
-        if (!(commandSender instanceof Player)) {
-            if (argument.equals("reload")) {
-                if (commandSender.hasPermission("dupeplus.admin.reloadconfig")) {
-                    BukkitConfigyml.reloadConfig();
-                    commandSender.sendMessage("%prefix% | Reloaded the config!".replaceAll("%prefix%", PlainTextComponentSerializer.plainText().serialize(BukkitConfigyml.getPrefix())));
-                } else {
-                    commandSender.sendMessage("%prefix% | You have no permission!".replaceAll("%prefix%", PlainTextComponentSerializer.plainText().serialize(BukkitConfigyml.getPrefix())));
-                }
-            } else {
-                commandSender.sendMessage("%prefix% | Reload configurations: /dupeplus reload".replaceAll("%prefix%", PlainTextComponentSerializer.plainText().serialize(BukkitConfigyml.getPrefix())));
-            }
-            return;
-        }
-        Player player = (Player) commandSender;
-        Audience audience = getPlugin().adventure().player(player);
-        if (!(argument.isEmpty())) {
-            if (argument.equals("reload")) {
-                if (player.hasPermission("dupeplus.admin.reloadconfig")) {
-                    BukkitConfigyml.reloadConfig();
-                    audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <green>Reloaded the config!</green>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
-                } else {
-                    audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>You have no permission!</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
-                }
-            } else if (argument.equals("blacklist")) {
-                if (player.hasPermission("dupeplus.admin.blacklist")) {
-                    if (!(item.isEmpty())) {
-                        BukkitConfigyml.config.getStringList("dupe.blacklist.items").add(item);
-                        BukkitConfigyml.reloadConfig();
-                        audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>Blacklisted %blacklist-item%</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix())).replaceAll("%blacklist-item%", item)));
-                    } else {
-                        audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>Please add a item to blacklist</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
-                    }
-                } else {
-                    audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix% <dark_gray>|</dark_gray> <red>You have no permission!</red>".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
-                }
-            } else {
-                audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix%\n <white>- reload</white>\n <white>- blacklist [item]".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
-            }
-        } else {
-            audience.sendMessage(MiniMessage.miniMessage().deserialize("%prefix%\n <white>- reload</white>\n <white>- blacklist [item]".replaceAll("%prefix%", MiniMessage.miniMessage().serialize(BukkitConfigyml.getPrefix()))));
+public class BukkitDupePlusCommand {
+
+    public BukkitDupePlusCommand() {
+        getPlugin().getCommandManager().command(
+                getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
+                        .senderType(Player.class)
+                        .handler(this::executeHelpCommand)
+        );
+
+        getPlugin().getCommandManager().command(
+                getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
+                        .literal("reload")
+                        .permission("dupeplus.reload")
+                        .senderType(Player.class)
+                        .handler(this::executeReloadCommand)
+        );
+
+        getPlugin().getCommandManager().command(
+                getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
+                        .permission("dupeplus.blocklist")
+                        .literal("blocklist")
+                        .senderType(Player.class)
+                        .handler(this::executeGUICommand)
+        );
+
+        getPlugin().getCommandManager().command(
+                getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
+                        .literal("block")
+                        .senderType(Player.class)
+                        .handler(this::executeBlockCommand)
+        );
+    }
+
+    private void executeGUICommand(CommandContext<Player> context) {
+        Player player = context.sender();
+        if (player.hasPermission("dupeplus.blocklist.gui")) {
+            new BlocklistMenu().getMenu(player).open(player);
         }
     }
 
+    private void executeReloadCommand(CommandContext<Player> context) {
+        Player player = context.sender();
+        Audience p = getPlugin().adventure().player(player);
+        if (player.hasPermission("dupeplus.reload")) {
+            BukkitConfigyml.reloadConfig();
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully reloaded! (if command name is changed, then players will need to rejoin to see the dupe command in tab complete)</white>"));
+        }
+    }
 
+    private void executeHelpCommand(CommandContext<Player> context) {
+        Player player = context.sender();
+        Audience p = getPlugin().adventure().player(player);
+        // Help message
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<st><gray>                          </gray></st>\n" +
+                "<green>/dupeplus</green>\n" +
+                "<gray>├</gray> <aqua>blacklist</aqua> (Opens a GUI)\n" +
+                "<gray>├</gray> <aqua>block</aqua> (Makes the item you are holding undupeable)\n" +
+                "<gray>└</gray> <aqua>reload</aqua> (Reloads the config.yml)\n" +
+                "<st><gray>                          </gray></st>"));
+
+
+    }
+
+    private void executeBlockCommand(CommandContext<Player> context) {
+        Player player = context.sender();
+        Audience p = getPlugin().adventure().player(player);
+
+        if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("MainHand")) {
+            if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                return;
+            }
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
+            if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
+                itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
+            }
+            player.getInventory().setItemInMainHand(itemStack);
+
+
+        } else if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("OffHand")) {
+            if (player.getInventory().getItemInOffHand().getType() == Material.AIR) {
+                return;
+            }
+            ItemStack itemStack = player.getInventory().getItemInOffHand();
+            if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
+                itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
+            }
+            player.getInventory().setItemInOffHand(itemStack);
+        } else {
+            if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                return;
+            }
+            ItemStack itemStack = player.getInventory().getItemInMainHand();
+            if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
+                itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
+            }
+            player.getInventory().setItemInMainHand(itemStack);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully made your item undupeable!</white>"));
+    }
 }

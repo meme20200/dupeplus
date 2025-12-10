@@ -6,7 +6,7 @@
 
     <groupId>net.meme20200</groupId>
     <artifactId>DupePlus</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -49,8 +49,8 @@
                             <shadedPattern>net.meme20200</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>dev.jorel.commandapi</pattern>
-                            <shadedPattern>net.meme20200.commandapi</shadedPattern>
+                            <pattern>dev.triumphteam.gui</pattern>
+                            <shadedPattern>net.meme20200.gui</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -63,7 +63,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>net.meme20200</mainClass>
+                                    <mainClass>net.meme20200.Bukkit.BukkitDupePlus</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -99,6 +99,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/releases/</url>
         </repository>
+        <repository>
+            <id>croabeast-repo</id>
+            <url>https://croabeast.github.io/repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -119,14 +123,19 @@
         <dependency>
             <groupId>io.github.bananapuncher714</groupId>
             <artifactId>nbteditor</artifactId>
-            <version>7.19.10</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.jorel</groupId>
-            <artifactId>commandapi-bukkit-shade</artifactId>
-            <version>10.1.2</version>
+            <version>7.20.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.incendo</groupId>
+            <artifactId>cloud-paper</artifactId>
+            <version>2.0.0-beta.10</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.triumphteam</groupId>
+            <artifactId>triumph-gui</artifactId>
+            <version>3.1.13</version>
+        </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
