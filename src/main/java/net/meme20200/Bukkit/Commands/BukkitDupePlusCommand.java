@@ -20,6 +20,7 @@ public class BukkitDupePlusCommand {
     public BukkitDupePlusCommand() {
         getPlugin().getCommandManager().command(
                 getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
+                        .permission("dupeplus.admin")
                         .senderType(Player.class)
                         .handler(this::executeHelpCommand)
         );
@@ -27,7 +28,7 @@ public class BukkitDupePlusCommand {
         getPlugin().getCommandManager().command(
                 getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
                         .literal("reload")
-                        .permission("dupeplus.reload")
+                        .permission("dupeplus.admin.reload")
                         .senderType(Player.class)
                         .handler(this::executeReloadCommand)
         );
@@ -43,6 +44,7 @@ public class BukkitDupePlusCommand {
         getPlugin().getCommandManager().command(
                 getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
                         .literal("block")
+                        .permission("dupeplus.block")
                         .senderType(Player.class)
                         .handler(this::executeBlockCommand)
         );
@@ -50,7 +52,7 @@ public class BukkitDupePlusCommand {
 
     private void executeGUICommand(CommandContext<Player> context) {
         Player player = context.sender();
-        if (player.hasPermission("dupeplus.blocklist.gui")) {
+        if (player.hasPermission("dupeplus.blocklist")) {
             new BlocklistMenu().getMenu(player).open(player);
         }
     }
@@ -58,7 +60,7 @@ public class BukkitDupePlusCommand {
     private void executeReloadCommand(CommandContext<Player> context) {
         Player player = context.sender();
         Audience p = getPlugin().adventure().player(player);
-        if (player.hasPermission("dupeplus.reload")) {
+        if (player.hasPermission("dupeplus.admin.reload")) {
             BukkitConfigyml.reloadConfig();
             p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully reloaded! (if command name is changed, then players will need to rejoin to see the dupe command in tab complete)</white>"));
         }
@@ -81,38 +83,41 @@ public class BukkitDupePlusCommand {
     private void executeBlockCommand(CommandContext<Player> context) {
         Player player = context.sender();
         Audience p = getPlugin().adventure().player(player);
+        if (player.hasPermission("dupeplus.block")) {
+            if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("MainHand")) {
+                if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                    return;
+                }
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
+                    itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
+                }
+                player.getInventory().setItemInMainHand(itemStack);
 
-        if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("MainHand")) {
-            if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-                return;
-            }
-            ItemStack itemStack = player.getInventory().getItemInMainHand();
-            if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-                itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
-            }
-            player.getInventory().setItemInMainHand(itemStack);
 
+            } else if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("OffHand")) {
+                if (player.getInventory().getItemInOffHand().getType() == Material.AIR) {
+                    return;
+                }
+                ItemStack itemStack = player.getInventory().getItemInOffHand();
+                if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
+                    itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
+                }
+                player.getInventory().setItemInOffHand(itemStack);
+            } else {
+                if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                    return;
+                }
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
+                    itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
+                }
+                player.getInventory().setItemInMainHand(itemStack);
+            }
 
-        } else if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("OffHand")) {
-            if (player.getInventory().getItemInOffHand().getType() == Material.AIR) {
-                return;
-            }
-            ItemStack itemStack = player.getInventory().getItemInOffHand();
-            if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-                itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
-            }
-            player.getInventory().setItemInOffHand(itemStack);
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully made your item undupeable!</white>"));
         } else {
-            if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
-                return;
-            }
-            ItemStack itemStack = player.getInventory().getItemInMainHand();
-            if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-                itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
-            }
-            player.getInventory().setItemInMainHand(itemStack);
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"));
         }
-
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully made your item undupeable!</white>"));
     }
 }
