@@ -36,7 +36,7 @@ public class BukkitDupePlus extends JavaPlugin {
     private static BukkitDupePlus plugin;
     private LegacyPaperCommandManager<CommandSender> manager;
     private BukkitAudiences adventure;
-    public static String version = "1.4.0";
+    public static String version = "1.4.1";
     public static boolean isItemsadderInstalled = false;
 
     public static boolean isPlaceholderAPIInstalled = false;
