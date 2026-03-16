@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.meme20200</groupId>
   <artifactId>DupePlus</artifactId>
-  <version>1.4.0</version>
+  <version>1.4.2</version>
   <build>
     <plugins>
       <plugin>
@@ -53,6 +53,10 @@
               <pattern>dev.triumphteam.gui</pattern>
               <shadedPattern>net.meme20200.gui</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>dev.faststats</pattern>
+              <shadedPattern>net.meme20200.faststats</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
       </plugin>
@@ -87,12 +91,17 @@
       <id>croabeast-repo</id>
       <url>https://croabeast.github.io/repo/</url>
     </repository>
+    <repository>
+      <id>thenextlvl-releases</id>
+      <name>TheNextLvl</name>
+      <url>https://repo.thenextlvl.net/releases</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.20-R0.1-SNAPSHOT</version>
+      <version>1.21.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

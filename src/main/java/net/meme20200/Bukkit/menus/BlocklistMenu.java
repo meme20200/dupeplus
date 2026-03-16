@@ -49,9 +49,9 @@ public class BlocklistMenu {
             GuiItem blacklistToggle = ItemBuilder.from(blacklistItem).asGuiItem(event -> {
                 event.setCancelled(true);
                 player.closeInventory();
-                BukkitConfigyml.setblacklistEnabled(false);
+                BukkitConfigyml.setBlacklistEnabled(false);
                 getPlugin().saveConfig();
-                if (player.hasPermission("dupeplus.blocklist")) {
+                if (player.hasPermission("dupeplus.admin.blocklist")) {
                     getMenu(player).open(player);
                 }
             });
@@ -80,9 +80,9 @@ public class BlocklistMenu {
             GuiItem whitelistToggle = ItemBuilder.from(whitelistItem).asGuiItem(event -> {
                 event.setCancelled(true);
                 player.closeInventory();
-                BukkitConfigyml.setblacklistEnabled(true);
+                BukkitConfigyml.setBlacklistEnabled(true);
                 getPlugin().saveConfig();
-                if (player.hasPermission("dupeplus.blocklist")) {
+                if (player.hasPermission("dupeplus.admin.blocklist")) {
                     getMenu(player).open(player);
                 }
             });

@@ -6,6 +6,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.context.CommandContext;
@@ -83,6 +84,14 @@ public class BukkitDupeCommand {
             }
         }
 
+        ItemStack item = BukkitConfigyml.getDupedItem(player);
+
+        // Send message if Dupe message isn't empty
+        if (item.getType() == Material.AIR) {
+            BukkitConfigyml.dupingnothingmessage(player, p);
+            return;
+        }
+
         if (BukkitConfigyml.isWorldsEnabled()) {
             if (BukkitConfigyml.getWorldsMode().equals("blacklist")) {
                 if (BukkitConfigyml.getWorlds().contains(player.getWorld().getName())) {
@@ -95,14 +104,6 @@ public class BukkitDupeCommand {
                     return;
                 }
             }
-        }
-
-        ItemStack item = BukkitConfigyml.getDupedItem(player);
-
-        // Send message if Dupe message isn't empty
-        if (item.getType() == Material.AIR) {
-            BukkitConfigyml.dupingnothingmessage(player, p);
-            return;
         }
 
         // Checks if item is in blacklisted items
@@ -122,6 +123,19 @@ public class BukkitDupeCommand {
                     BukkitConfigyml.blockedmessage(player, p);
                     return;
                 }
+                if (BukkitConfigyml.isShulkerBoxEnabled() && Tag.SHULKER_BOXES.isTagged(item.getType())) {
+                    if (BukkitConfigyml.shulkerBoxBlacklist(item)) {
+                        BukkitConfigyml.blockedmessage(player, p);
+                        return;
+                    }
+                }
+                // 1.21.2 and above only
+                if (BukkitConfigyml.isBundlesEnabled() && Tag.ITEMS_BUNDLES.isTagged(item.getType())) {
+                    if (BukkitConfigyml.bundleBlacklist(item)) {
+                        BukkitConfigyml.blockedmessage(player, p);
+                        return;
+                    }
+                }
             } else {
                 if (!BukkitConfigyml.listedItems().contains(item.getType())) {
                     BukkitConfigyml.blockedmessage(player, p);
@@ -140,7 +154,7 @@ public class BukkitDupeCommand {
 
         }
 
-        if (BukkitConfigyml.isCooldownEnabled()) {
+        if (BukkitConfigyml.isCooldownEnabled() && player.hasPermission("dupeplus.cooldown")) {
             if (cooldownManager.hasCooldown(player.getUniqueId())) {
                 BukkitConfigyml.Cooldownmessage(p, player, formatDuration(cooldownManager.getRemainingCooldown(player.getUniqueId())));
                 return;
@@ -199,7 +213,7 @@ public class BukkitDupeCommand {
                     BukkitConfigyml.DupeMessage(player, p);
                 }
 
-                if (BukkitConfigyml.isCooldownEnabled()) {
+                if (BukkitConfigyml.isCooldownEnabled() && player.hasPermission("dupeplus.cooldown")) {
                     cooldownManager.setCooldown(player.getUniqueId(), Duration.ofSeconds(BukkitConfigyml.cooldownSeconds()));
                 }
                 return;
@@ -215,7 +229,7 @@ public class BukkitDupeCommand {
             BukkitConfigyml.DupeMessage(player, p);
         }
         dupe(player, item);
-        if (BukkitConfigyml.isCooldownEnabled()) {
+        if (BukkitConfigyml.isCooldownEnabled() && player.hasPermission("dupeplus.cooldown")) {
             cooldownManager.setCooldown(player.getUniqueId(), Duration.ofSeconds(BukkitConfigyml.cooldownSeconds()));
         }
     }

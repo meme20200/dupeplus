@@ -1,10 +1,10 @@
 name: DupePlus
-version: 1.4.1
+version: 1.4.2
 main: net.meme20200.Bukkit.BukkitDupePlus
 description: The plugin that turns your server into a Dupe Server.
-author: meme20200
+author: GalaxyDevel0per
 folia-supported: true
-api-version: '1.20'
+api-version: '1.21.2'
 dependencies:
   server:
     ItemsAdder:

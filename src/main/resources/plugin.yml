@@ -1,20 +1,34 @@
 name: DupePlus
 main: net.meme20200.Bukkit.BukkitDupePlus
-version: 1.4.1
+version: 1.4.2
 description: The plugin that turns your server into a Dupe Server.
 author: meme20200
-api-version: "1.20"
+api-version: "1.21.2"
 softdepend:
   - ItemsAdder
   - PlaceholderAPI
 authors:
   - GalaxyDevel0per
 permissions:
-  dupeplus.admin.reloadconfig:
+  dupeplus.admin.*:
+    description: All admin permissions
+    default: op
+    children:
+      dupeplus.admin.reload: true
+      dupeplus.admin.blocklist: true
+      dupeplus.admin.block: true
+      dupeplus.admin: true
+  dupeplus.updates.notify:
+    description: Notifies the player of the latest update
+    default: op
+  dupeplus.admin.reload:
     description: Allows the player to reload the configuration.
     default: op
-  dupeplus.admin.blacklist:
-    description: Allows the player to reload the configuration.
+  dupeplus.admin.blocklist:
+    description: Allows the player to open the blocklist menu
+    default: op
+  dupeplus.admin.block:
+    description: Allows the player to make the item undupeable
     default: op
   dupeplus.times:
     description: Allows the player to use the times

@@ -84,6 +84,17 @@ public class AddItemMenu {
             event.setCancelled(true);
         }));
 
+        gui.setCloseGuiAction(event -> {
+            ItemStack leftover = gui.getInventory().getItem(13);
+            if (leftover != null && leftover.getType() != Material.AIR) {
+                gui.getInventory().setItem(13, null); // Clear the slot
+                player.getInventory().addItem(leftover).forEach((index, item) -> {
+                    // If inventory is full, drop it at their feet
+                    player.getWorld().dropItemNaturally(player.getLocation(), item);
+                });
+            }
+        });
+
         return gui;
     }
 

@@ -102,6 +102,9 @@ dupe:
     # Checks Shulker Boxes when duplicating items (Default: true)
     shulkerbox: true
 
+    # Checks Bundles when duplicating items (Default: true)
+    bundle: true
+
     # If the player tries to dupe an item that is in the blacklist or the item is not in the whitelist (Default: "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>")
     # Allowed message variable: <prefix>, <item_type>, <item_name>, <item_count>
     # Leave blank for no message
@@ -226,6 +229,6 @@ updates:
     console-notify-message: "DupePlus | Update DupePlus at <link>"
 
 # Don't edit this
-# Previous: 1.3
-# config-version: 1.4
-config-version: 1.4
+# Previous: 1.4
+# config-version: 1.4.2
+config-version: 1.4.2

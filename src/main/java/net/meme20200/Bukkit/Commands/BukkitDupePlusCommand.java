@@ -35,7 +35,7 @@ public class BukkitDupePlusCommand {
 
         getPlugin().getCommandManager().command(
                 getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
-                        .permission("dupeplus.blocklist")
+                        .permission("dupeplus.admin.blocklist")
                         .literal("blocklist")
                         .senderType(Player.class)
                         .handler(this::executeGUICommand)
@@ -44,15 +44,23 @@ public class BukkitDupePlusCommand {
         getPlugin().getCommandManager().command(
                 getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
                         .literal("block")
-                        .permission("dupeplus.block")
+                        .permission("dupeplus.admin.block")
                         .senderType(Player.class)
                         .handler(this::executeBlockCommand)
         );
+
+        getPlugin().getCommandManager().command(
+                getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
+                        .literal("issues", "bugs")
+                        .permission("dupeplus.admin")
+                        .senderType(Player.class)
+                        .handler(this::executeIssuesCommand)
+        );
     }
 
-    private void executeGUICommand(CommandContext<Player> context) {
+    public void executeGUICommand(CommandContext<Player> context) {
         Player player = context.sender();
-        if (player.hasPermission("dupeplus.blocklist")) {
+        if (player.hasPermission("dupeplus.admin.blocklist")) {
             new BlocklistMenu().getMenu(player).open(player);
         }
     }
@@ -72,6 +80,7 @@ public class BukkitDupePlusCommand {
         // Help message
         p.sendMessage(MiniMessage.miniMessage().deserialize("<st><gray>                          </gray></st>\n" +
                 "<green>/dupeplus</green>\n" +
+                "<gray>├</gray> <aqua>max</aqua> <gray><number></gray>\n" +
                 "<gray>├</gray> <aqua>blacklist</aqua> (Opens a GUI)\n" +
                 "<gray>├</gray> <aqua>block</aqua> (Makes the item you are holding undupeable)\n" +
                 "<gray>└</gray> <aqua>reload</aqua> (Reloads the config.yml)\n" +
@@ -80,10 +89,24 @@ public class BukkitDupePlusCommand {
 
     }
 
-    private void executeBlockCommand(CommandContext<Player> context) {
+    private void executeIssuesCommand(CommandContext<Player> context) {
         Player player = context.sender();
         Audience p = getPlugin().adventure().player(player);
-        if (player.hasPermission("dupeplus.block")) {
+        // Issues message
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<st><gray>                          </gray></st>\n" +
+                "<green>DupePlus <aqua>Official Bug Tracker</aqua></green>\n" +
+                "<gray>└</gray> <click:open_url:'https://github.com/meme20200/dupeplus'>https://github.com/meme20200/dupeplus</click>\n" +
+                "\n" +
+                "<white>You can support the plugin by reporting bugs or requesting new features.</white> \n" +
+                "<st><gray>                          </gray></st>"));
+
+
+    }
+
+    public void executeBlockCommand(CommandContext<Player> context) {
+        Player player = context.sender();
+        Audience p = getPlugin().adventure().player(player);
+        if (player.hasPermission("dupeplus.admin.block")) {
             if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("MainHand")) {
                 if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
                     return;

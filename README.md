@@ -271,17 +271,21 @@ The command gives you a diamond sword with the undupeable tag in the Component f
 Instead of using components, you have to use NBT which is JSON formatted, instead of including the custom tag into the custom_data, you don't have to put it anywhere.
 
 ```
-/give @P minecraft:diamond_sword{dupenotallowed:true}
+/give @p minecraft:diamond_sword{dupenotallowed:true}
 ```
 The command gives you a diamond sword with the undupeable tag in the NBT format.
 
 ## Features
+- Shulker and Bundle Checker [Checks are enabled by default to stop players from bypassing the blocked item list]
+- Blocklist GUI [Control the Blocklist of DupePlus easier in-game]
+- Custom Command [Rename "/dupe" into another command]
+- World Blocker [Block worlds where you don't want players to be able to do /dupe]
 - Lore [Add Lore to a duplicated item, don't worry this won't affect the original item]
 - Times Max Value (Times) [Give certain groups or players a specific maximum time to duplicate an item.]
 - ItemsAdder Support (Blacklist) [Don't be limited to only blacklisting minecraft items, you can blacklist itemsadder items by their IDs, like itemsadder:op_weapon]
 - Custom NBT [Another way of blocking item, it's easy, just add {"dupenotallowed": true} to the minecraft:custom_data for 1.20.5 and above, or as its own tag for 1.20.4 and below]
 - Update Checker [Don't be living under a rock, new features that improve the Dupe System in your server]
-- Blacklist [Block items from being duped]
+- Cooldown [Add a cooldown to /dupe]
 - Times Support [Dupe the item several times.]
 - Dupe Hand [Change the item being duped, Offhand dupe or Main hand dupe]
 - Permission Dupe [Give certain groups or players /dupe by using a permission plugin like [LuckPerms](https://luckperms.net/)]

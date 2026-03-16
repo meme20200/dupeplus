@@ -11,21 +11,13 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
 import net.meme20200.Bukkit.menus.BlocklistMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.profile.PlayerTextures;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 import static net.meme20200.Bukkit.Utilities.UtilAPIs.getCustomSkull;
 
@@ -66,7 +58,7 @@ public class ItemListMenu {
 
         ItemStack previousHead = getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzM5MjYyM2NhZmRmNzQ1YmZjYjMxZDA1ZGJjZDI0N2Q1NzFkODk3ZjIyYWNlMzhlZTU0ZWVkM2ZiOTYzNiJ9fX0=");
         ItemMeta previousMeta = previousHead.getItemMeta();
-        previousMeta.setDisplayName(BukkitComponentSerializer.legacy().serialize(MiniMessage.miniMessage().deserialize("<yellow><white>←</white> <b>ᴘʀᴇᴠɪᴏᴜs</b></yellow>").decoration(TextDecoration.ITALIC, false)));
+        previousMeta.setDisplayName(BukkitComponentSerializer.legacy().serialize(MiniMessage.miniMessage().deserialize("<yellow><white>←</white> <b>PREVIOUS</b></yellow>").decoration(TextDecoration.ITALIC, false)));
         previousHead.setItemMeta(previousMeta);
 
         gui.setItem(6, 4, ItemBuilder.from(previousHead).asGuiItem(event -> {

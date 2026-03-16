@@ -89,6 +89,16 @@ public class UnduplicatorMenu {
             event.setCancelled(true);
         }));
 
+        gui.setCloseGuiAction(event -> {
+            ItemStack leftover = gui.getInventory().getItem(13);
+            if (leftover != null && leftover.getType() != Material.AIR) {
+                gui.getInventory().setItem(13, null);
+                player.getInventory().addItem(leftover).forEach((index, item) -> {
+                    player.getWorld().dropItemNaturally(player.getLocation(), item);
+                });
+            }
+        });
+
         return gui;
     }
 

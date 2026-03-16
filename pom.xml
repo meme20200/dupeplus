@@ -6,7 +6,7 @@
 
     <groupId>net.meme20200</groupId>
     <artifactId>DupePlus</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -51,6 +51,10 @@
                         <relocation>
                             <pattern>dev.triumphteam.gui</pattern>
                             <shadedPattern>net.meme20200.gui</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>dev.faststats</pattern>
+                            <shadedPattern>net.meme20200.faststats</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -103,13 +107,18 @@
             <id>croabeast-repo</id>
             <url>https://croabeast.github.io/repo/</url>
         </repository>
+        <repository>
+            <id>thenextlvl-releases</id>
+            <name>TheNextLvl</name>
+            <url>https://repo.thenextlvl.net/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20-R0.1-SNAPSHOT</version>
+            <version>1.21.2-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -172,6 +181,11 @@
             <artifactId>placeholderapi</artifactId>
             <version>2.11.6</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.faststats.metrics</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>0.18.1</version>
         </dependency>
     </dependencies>
 

@@ -10,10 +10,15 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
+import org.bukkit.Tag;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -88,7 +93,11 @@ public class BukkitConfigyml {
         return config.getBoolean("dupe.list.blacklist", true);
     }
 
-    public static void setblacklistEnabled(boolean b) {
+    public static void setBlacklistEnabled(boolean b) {
+        config.set("dupe.list.blacklist", b);
+    }
+
+    public static void setMax(boolean b) {
         config.set("dupe.list.blacklist", b);
     }
 
@@ -183,6 +192,7 @@ public class BukkitConfigyml {
                 maxAllowed = Math.max(maxAllowed, value);
             }
         }
+
         return maxAllowed;
     }
     public static int timesMini() {
@@ -354,6 +364,54 @@ public class BukkitConfigyml {
         return config.getBoolean("dupe.lore.enabled", true);
     }
 
+    public static boolean isShulkerBoxEnabled() {
+        return config.getBoolean("dupe.list.shulkerbox", true);
+    }
+
+    public static boolean isBundlesEnabled() {
+        return config.getBoolean("dupe.list.bundle", true);
+    }
+
+    public static boolean shulkerBoxBlacklist(ItemStack item) {
+        if (item.getItemMeta() instanceof BlockStateMeta meta) {
+            if (meta.getBlockState() instanceof ShulkerBox shulker) {
+                Inventory shulkerInventory = shulker.getInventory();
+                for (ItemStack i : shulkerInventory.getContents()) {
+                    if (i == null) continue;
+                    // 1.21.2 and above only
+                    if (Tag.ITEMS_BUNDLES.isTagged(i.getType())) {
+                        if (bundleBlacklist(i)) {
+                            return true;
+                        }
+                    }
+                    if (BukkitConfigyml.listedItems().contains(i.getType())) {
+                        return true;
+                    }
+                    if (CustomBlacklistItems(i)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean bundleBlacklist(ItemStack item) {
+        if (item.getItemMeta() instanceof BundleMeta meta) {
+            List<ItemStack> bundleItems = meta.getItems();
+            for (ItemStack i : bundleItems) {
+                if (i == null) continue;
+                if (BukkitConfigyml.listedItems().contains(i.getType())) {
+                    return true;
+                }
+                if (CustomBlacklistItems(i)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static String getLoreMode() {
         return config.getString("dupe.lore.mode", "set");
     }
@@ -437,7 +495,7 @@ public class BukkitConfigyml {
 
     public static boolean WorldBlockedMessage(Player player, Audience p) {
         ItemStack item = getDupedItem(player);
-        Component a = format(player, config.getString("dupe.custom-nbt-item.blocked-message", "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"),
+        Component a = format(player, config.getString("dupe.worlds.blocked-message", "<prefix> <red>The world is banned from using /dupe!</red>"),
                 Placeholder.component("prefix", getPrefix()),
                 Placeholder.unparsed("item_name", itemStackName(item)),
                 Placeholder.unparsed("item_type", item.getType().name()),
@@ -479,6 +537,5 @@ public class BukkitConfigyml {
     private static boolean looksLikeMiniMessage(String text) {
         return text.contains("<") && text.contains(">");
     }
-
 }
 
