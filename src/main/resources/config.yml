@@ -22,6 +22,10 @@ dupe:
   # The prefix that is added before each message.
   prefix: "<green>DupePlus</green> <dark_gray>|</dark_gray>"
 
+  # Make it false to let everyone allowed to use this command (Default: false)
+  # Permission: dupeplus.dupe
+  permission: false
+
   # Settings to change the Dupe Command into a Custom command.
   custom-command:
     # Make it false to disable the custom command, make it true to enable it. (Default: false)
@@ -32,7 +36,20 @@ dupe:
     name: "dupe"
 
   # Other ways of using /dupe
-  aliases: ["duplicate"]
+  aliases: [ "duplicate" ]
+
+  # The message sent to the player when try to execute dupe or reloadconfig no permission (Only if the above is true) (Default: "<prefix> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>")
+  # Allowed Message Variables: <prefix>
+  # Leave blank for no message
+  permission-message: "<prefix> <red>You are not allowed to use this command</red>"
+
+  # The message sent to the player when you duplicate an item. (Default: "<prefix> <dark_gray>|</dark_gray> <gray>Duped <item_name></gray>")
+  # Allowed Message Variables: <prefix>, <item_type>, <item_name>, <old_item_count>, <new_item_count>
+  message: "<prefix> <gray>Duped <white><item_name></gray>"
+
+  # The message sent whenever the player tries to dupe nothing (Air) (Default: "")
+  # Leave blank for no message
+  duping-nothing-message: ""
 
   # Settings to block or allow /dupe in specific worlds.
   worlds:
@@ -50,25 +67,7 @@ dupe:
     blocked-message: "<prefix> <red>The world is banned from using /dupe!</red>"
 
     # Add or remove worlds to either block (blacklist) or allow (whitelist) it from players in the world from duping.
-    worlds: []
-
-
-  # Make it false to let everyone allowed to use this command (Default: false)
-  # Permission: dupeplus.dupe
-  permission: false
-
-
-  # The message sent to the player when try to execute dupe or reloadconfig no permission (Only if the above is true) (Default: "<prefix> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>")
-  # Leave blank for no message
-  permission-message: "<prefix> <red>You are not allowed to use this command</red>"
-
-  # The message sent to the player when you duplicate an item. (Default: "<prefix> <dark_gray>|</dark_gray> <gray>Duped <item_name></gray>")
-  # Allowed Message Variables: <prefix>, <item_type>, <item_name>, <old_item_count>, <new_item_count>
-  message: "<prefix> <gray>Duped <white><item_name></gray>"
-
-  # The message sent whenever the player tries to dupe nothing (Air) (Default: "")
-  # Leave blank for no message
-  duping-nothing-message: ""
+    worlds: [ ]
 
   # Checks if the item has a NBT Tag of "dupenotallowed", if it has, it will not dupe the item.
   custom-nbt-item:
@@ -138,7 +137,7 @@ dupe:
     # Leave blank for no message
     wait-message: "<prefix> <red>Please wait <duration>.</red>"
 
-    # Make it true if you want players with the permission to ignore the cooldown, make it false if you want everyone to have cooldown. (Default: false)
+    # Make it true if you want players with the permission to ignore the cooldown, make it false if you want everyone to have cooldown. (Default: true)
     # Permission: dupeplus.cooldown
     permission: true
 
@@ -175,7 +174,7 @@ dupe:
     # Instead of sending the dupe message for every time it duplicates, it sends it one time to stop spam. (Default: true)
     one-time-message: true
 
-    # Make it false to let everyone allowed to use this command (Default: false)
+    # Make it false to let everyone allowed to use this feature. (Default: false)
     # Permission: dupeplus.times
     permission: false
 
@@ -192,7 +191,64 @@ dupe:
     # set: Checks if the dupe lore exists or not, if it doesn't exist then it will replace the existing lore with the dupe lore, otherwise it just ignores. (Recommended)
     mode: set
 
+    # Make it false to always add/set the lore to the duplicated item regardless of the player's permission to use this feature or not, make it true to not add the lore if the player doesn't have the permission. (Default: false)
+    # Permission: dupeplus.lore
+    permission: false
+
+  # Plays the set sound whenever you use /dupe
+  # Permission: dupeplus.sound
+  sound-feedback:
+    # Enables or disables this feature. (Default: false)
+    enabled: false
+
+    # The Minecraft sound category used to play the sound. (Default: master)
+    # Acceptable Values: master, music, record, weather, block, hostile, neutral, player, ambient, voice
+    category: master
+
+    # The sound used whenever the player uses /dupe. (Default: "minecraft:block.amethyst_block.chime")
+    sound: "minecraft:block.amethyst_block.chime"
+
+    # The volume of the sound played to a player whenever they use /dupe. (Default: 1)
+    volume: 1
+
+    # The pitch of the sound played to a player whenever they use /dupe. (Default: 1)
+    pitch: 1
+
+    # Make it false to let everyone allowed to use this feature. (Default: false)
+    # Permission: dupeplus.sound
+    permission: false
+
+  # Deducts money from the player whenever they use /dupe
+  # Permission: dupeplus.bypasseconomy
+  economy:
+    # Enables or disables this feature. (Default: false)
+    # Note: You must have Vault installed and must set vault in integrations to true if you are going to use this feature.
+    enabled: false
+
+    # Whenever the player does /dupe <times>, should it deduct from the player once or every time? (Default: true)
+    charge-per-dupe: true
+
+    # The message sent to the player whenever the deduction was complete. (Can be silent)
+    # Allowed Message Variables: <prefix>, <price>, <item_type>, <item_name>, <item_count>
+    # Leave blank for no message
+    successful-message: ""
+
+    # The message sent to the player whenever they don't have enough currency to use /dupe.
+    # Leave blank for no message
+    # Allowed Message Variables: <prefix>, <price>, <item_type>, <item_name>, <item_count>
+    not-enough-message: "<prefix> <red>You don't have enough currency to use /dupe!</red>"
+
+    # The price that deducts from the player whenever they use /dupe (Default: 25)
+    # Setting this to 0 will not deduct anything from the player.
+    # Do not use negative numbers
+    price: 25
+
+    # Make it false to make everyone pay to use /dupe. (Default: false)
+    # Permission: dupeplus.bypasseconomy
+    permission: false
+
 # The Integrations that this plugin connects with.
+# Must restart server for the changes to apply (Also the plugin must already be installed)
 # If you notice any issues then please create an issue in GitHub (meme20200/dupeplus)
 integrations:
   # Enables ItemsAdder Integration (Default: true)
@@ -201,6 +257,8 @@ integrations:
   # Enables PlaceholderAPI Integration (Default: true)
   placeholderapi: true
 
+  # Enables VaultAPI Integration (Required if economy feature is enabled) (Default: true)
+  vault: true
 
 
 # Checks for updates using the set API (Modrinth or SpigotMC),
@@ -229,6 +287,6 @@ updates:
     console-notify-message: "DupePlus | Update DupePlus at <link>"
 
 # Don't edit this
-# Previous: 1.4
-# config-version: 1.4.2
-config-version: 1.4.2
+# Previous: 1.4.2
+# config-version: 1.4.3
+config-version: 1.4.3

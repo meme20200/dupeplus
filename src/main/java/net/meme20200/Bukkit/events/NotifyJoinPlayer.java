@@ -1,7 +1,7 @@
 package net.meme20200.Bukkit.events;
 
 import net.kyori.adventure.audience.Audience;
-import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.utilities.BukkitConfigyml;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

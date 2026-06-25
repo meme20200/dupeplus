@@ -8,7 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.utilities.BukkitConfigyml;
 import net.meme20200.Bukkit.menus.BlocklistMenu;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import static net.meme20200.Bukkit.BukkitDupePlus.getPlugin;
-import static net.meme20200.Bukkit.Utilities.UtilAPIs.getCustomSkull;
+import static net.meme20200.Bukkit.utilities.UtilAPIs.getCustomSkull;
 
 public class AddItemMenu {
     public Gui getMenu(Player player) {

@@ -1,4 +1,4 @@
-package net.meme20200.Bukkit.Commands;
+package net.meme20200.Bukkit.commands;
 
 import org.bukkit.entity.Player;
 import org.incendo.cloud.description.Description;

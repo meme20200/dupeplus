@@ -1,14 +1,15 @@
 package net.meme20200.Bukkit.menus.submenus;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.meme20200.Bukkit.utilities.BukkitConfigyml;
 import net.meme20200.Bukkit.menus.BlocklistMenu;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import static net.meme20200.Bukkit.BukkitDupePlus.getPlugin;
-import static net.meme20200.Bukkit.Utilities.UtilAPIs.getCustomSkull;
+import static net.meme20200.Bukkit.utilities.UtilAPIs.getCustomSkull;
 
 public class UnduplicatorMenu {
 
@@ -103,11 +104,14 @@ public class UnduplicatorMenu {
     }
 
     private ItemStack processItem(Player player, ItemStack item) {
-        if (!NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-            item = NBTEditor.set(item, (byte) 1, NBTEditor.CUSTOM_DATA, "dupenotallowed");
+        if (!BukkitConfigyml.customNBTItem(item)) {
+            NBT.modify(item, nbt -> {
+                nbt.setBoolean("dupenotallowed", true);
+            });
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.RECORDS,1f, 1f);
             return item;
+        } else {
+            return item;
         }
-        return item;
     }
 }

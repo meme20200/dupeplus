@@ -1,12 +1,13 @@
-package net.meme20200.Bukkit.Commands;
+package net.meme20200.Bukkit.commands;
 
-import io.github.bananapuncher714.nbteditor.NBTEditor;
+import de.tr7zw.changeme.nbtapi.NBT;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.utilities.BukkitConfigyml;
 
 import net.kyori.adventure.audience.Audience;
 import net.meme20200.Bukkit.menus.BlocklistMenu;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.context.CommandContext;
@@ -29,7 +30,6 @@ public class BukkitDupePlusCommand {
                 getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
                         .literal("reload")
                         .permission("dupeplus.admin.reload")
-                        .senderType(Player.class)
                         .handler(this::executeReloadCommand)
         );
 
@@ -51,6 +51,14 @@ public class BukkitDupePlusCommand {
 
         getPlugin().getCommandManager().command(
                 getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
+                        .literal("unblock")
+                        .permission("dupeplus.admin.unblock")
+                        .senderType(Player.class)
+                        .handler(this::executeBlockCommand)
+        );
+
+        getPlugin().getCommandManager().command(
+                getPlugin().getCommandManager().commandBuilder("dupeplus", Description.of("DupePlus Command"))
                         .literal("issues", "bugs")
                         .permission("dupeplus.admin")
                         .senderType(Player.class)
@@ -65,12 +73,18 @@ public class BukkitDupePlusCommand {
         }
     }
 
-    private void executeReloadCommand(CommandContext<Player> context) {
-        Player player = context.sender();
-        Audience p = getPlugin().adventure().player(player);
-        if (player.hasPermission("dupeplus.admin.reload")) {
-            BukkitConfigyml.reloadConfig();
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully reloaded! (if command name is changed, then players will need to rejoin to see the dupe command in tab complete)</white>"));
+    private void executeReloadCommand(CommandContext<CommandSender> context) {
+        if (context.sender() instanceof Player player) {
+            Audience p = getPlugin().adventure().player(player);
+            if (player.hasPermission("dupeplus.admin.reload")) {
+                BukkitConfigyml.reloadConfig();
+                p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully reloaded! (if command name is changed, then players will need to rejoin to see the dupe command in tab complete)</white>"));
+            }
+        } else {
+            if (context.sender().hasPermission("dupeplus.admin.reload")) {
+                BukkitConfigyml.reloadConfig();
+                context.sender().sendMessage("DupePlus | Successfully reloaded! (if command name is changed, then players will need to rejoin to see the dupe command in tab complete)");
+            }
         }
     }
 
@@ -83,6 +97,7 @@ public class BukkitDupePlusCommand {
                 "<gray>├</gray> <aqua>max</aqua> <gray><number></gray>\n" +
                 "<gray>├</gray> <aqua>blacklist</aqua> (Opens a GUI)\n" +
                 "<gray>├</gray> <aqua>block</aqua> (Makes the item you are holding undupeable)\n" +
+                "<gray>├</gray> <aqua>unblock</aqua> (Makes the item you are holding dupeable if you made it undupeable)\n" +
                 "<gray>└</gray> <aqua>reload</aqua> (Reloads the config.yml)\n" +
                 "<st><gray>                          </gray></st>"));
 
@@ -112,35 +127,65 @@ public class BukkitDupePlusCommand {
                     return;
                 }
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
-                if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-                    itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
-                }
-                player.getInventory().setItemInMainHand(itemStack);
-
-
+                undupeableItem(itemStack);
             } else if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("OffHand")) {
                 if (player.getInventory().getItemInOffHand().getType() == Material.AIR) {
                     return;
                 }
                 ItemStack itemStack = player.getInventory().getItemInOffHand();
-                if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-                    itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
-                }
-                player.getInventory().setItemInOffHand(itemStack);
+                undupeableItem(itemStack);
             } else {
                 if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
                     return;
                 }
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
-                if (!NBTEditor.contains(itemStack, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-                    itemStack = NBTEditor.set(itemStack, true, NBTEditor.CUSTOM_DATA, "dupenotallowed");
-                }
-                player.getInventory().setItemInMainHand(itemStack);
+                undupeableItem(itemStack);
             }
-
             p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully made your item undupeable!</white>"));
         } else {
             p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"));
         }
     }
+
+    public void executeUnblockCommand(CommandContext<Player> context) {
+        Player player = context.sender();
+        Audience p = getPlugin().adventure().player(player);
+        if (player.hasPermission("dupeplus.admin.unblock")) {
+            if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("MainHand")) {
+                if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                    return;
+                }
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                dupeableItem(itemStack);
+            } else if (getPlugin().getConfig().getString("dupe.dupe-on", "MainHand").equals("OffHand")) {
+                if (player.getInventory().getItemInOffHand().getType() == Material.AIR) {
+                    return;
+                }
+                ItemStack itemStack = player.getInventory().getItemInOffHand();
+                dupeableItem(itemStack);
+            } else {
+                if (player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+                    return;
+                }
+                ItemStack itemStack = player.getInventory().getItemInMainHand();
+                dupeableItem(itemStack);
+            }
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <white>Successfully made your item dupeable!</white>"));
+        } else {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<green>DupePlus</green> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"));
+        }
+    }
+
+    private void undupeableItem(ItemStack itemStack) {
+        NBT.modify(itemStack, nbt -> {
+            nbt.setBoolean("dupenotallowed", true);
+        });
+    }
+
+    private void dupeableItem(ItemStack itemStack) {
+        NBT.modify(itemStack, nbt -> {
+            nbt.removeKey("dupenotallowed");
+        });
+    }
+
 }

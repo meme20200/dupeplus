@@ -1,4 +1,4 @@
-package net.meme20200.Bukkit.Utilities;
+package net.meme20200.Bukkit.utilities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -45,5 +45,10 @@ public class UtilAPIs {
         int urlStartIndex = json.indexOf("\"url\":\"") + 7;
         int urlEndIndex = json.indexOf("\"", urlStartIndex);
         return json.substring(urlStartIndex, urlEndIndex);
+    }
+
+    public static boolean isBundleItem(org.bukkit.Material material) {
+        if (material == null) return false;
+        return material.name().endsWith("BUNDLE");
     }
 }

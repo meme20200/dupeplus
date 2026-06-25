@@ -6,7 +6,7 @@
 
     <groupId>net.meme20200</groupId>
     <artifactId>DupePlus</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -45,7 +45,6 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
                             <shadedPattern>net.meme20200</shadedPattern>
                         </relocation>
                         <relocation>
@@ -55,6 +54,10 @@
                         <relocation>
                             <pattern>dev.faststats</pattern>
                             <shadedPattern>net.meme20200.faststats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                            <shadedPattern>net.meme20200.nbtapi</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -82,6 +85,10 @@
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/public/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>CodeMC</id>
@@ -118,7 +125,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.21.2-R0.1-SNAPSHOT</version>
+            <version>1.20-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -130,15 +137,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.github.bananapuncher714</groupId>
-            <artifactId>nbteditor</artifactId>
-            <version>7.20.3</version>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7.1</version>
+            <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.incendo</groupId>
             <artifactId>cloud-paper</artifactId>
-            <version>2.0.0-beta.10</version>
+            <version>2.0.0-beta.16</version>
         </dependency>
         <dependency>
             <groupId>dev.triumphteam</groupId>
@@ -147,18 +154,13 @@
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
-            <artifactId>adventure-text-minimessage</artifactId>
-            <version>4.25.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.kyori</groupId>
-            <artifactId>adventure-api</artifactId>
-            <version>4.25.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
             <version>4.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.25.0</version>
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
@@ -185,7 +187,13 @@
         <dependency>
             <groupId>dev.faststats.metrics</groupId>
             <artifactId>bukkit</artifactId>
-            <version>0.18.1</version>
+            <version>0.27.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api</artifactId>
+            <version>2.15.7</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

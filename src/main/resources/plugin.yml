@@ -1,14 +1,18 @@
 name: DupePlus
 main: net.meme20200.Bukkit.BukkitDupePlus
-version: 1.4.2
+version: 1.4.3
 description: The plugin that turns your server into a Dupe Server.
 author: meme20200
-api-version: "1.21.2"
+api-version: "1.20"
 softdepend:
   - ItemsAdder
   - PlaceholderAPI
+  - Vault
+bstats:
+  enabled: true
+  plugin-id: 18772
 authors:
-  - GalaxyDevel0per
+  - Just_Galaxyy
 permissions:
   dupeplus.admin.*:
     description: All admin permissions
@@ -41,4 +45,10 @@ permissions:
     default: true
   dupeplus.cooldown:
     description: The player will need to wait a certain amount of seconds until the player can dupe.
+    default: true
+  dupeplus.lore:
+    description: Add/Set lore to the duplicated item
+    default: true
+  dupeplus.sound:
+    description: Plays a sound to the player whenever the player uses /dupe (Sound Feedback must be enabled in the config.yml)
     default: true

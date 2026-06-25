@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.meme20200</groupId>
   <artifactId>DupePlus</artifactId>
-  <version>1.4.2</version>
+  <version>1.4.3</version>
   <build>
     <plugins>
       <plugin>
@@ -57,6 +57,10 @@
               <pattern>dev.faststats</pattern>
               <shadedPattern>net.meme20200.faststats</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>de.tr7zw.changeme.nbtapi</pattern>
+              <shadedPattern>net.meme20200.nbtapi</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
       </plugin>
@@ -66,6 +70,10 @@
     <repository>
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/public/</url>
+    </repository>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
     </repository>
     <repository>
       <id>CodeMC</id>
@@ -101,13 +109,19 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.21.2-R0.1-SNAPSHOT</version>
+      <version>1.20-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>dev.lone</groupId>
       <artifactId>api-itemsadder</artifactId>
       <version>4.0.10</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.MilkBowl</groupId>
+      <artifactId>VaultAPI</artifactId>
+      <version>1.7.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

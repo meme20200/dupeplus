@@ -7,7 +7,7 @@ import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.utilities.BukkitConfigyml;
 import net.meme20200.Bukkit.menus.submenus.AddItemMenu;
 import net.meme20200.Bukkit.menus.submenus.ItemListMenu;
 import net.meme20200.Bukkit.menus.submenus.UnduplicatorMenu;

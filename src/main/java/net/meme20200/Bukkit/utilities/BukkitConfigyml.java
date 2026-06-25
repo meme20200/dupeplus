@@ -1,16 +1,18 @@
-package net.meme20200.Bukkit.Utilities;
+package net.meme20200.Bukkit.utilities;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import dev.lone.itemsadder.api.CustomStack;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,12 +25,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static net.meme20200.Bukkit.BukkitDupePlus.*;
+import static net.meme20200.Bukkit.utilities.UtilAPIs.isBundleItem;
 
 
 public class BukkitConfigyml {
@@ -37,6 +37,7 @@ public class BukkitConfigyml {
     public static String ConsoleMessage() {
         return config.getString("dupe.console-message", "DupePlus | You can't do that!");
     }
+
     public static void reloadConfig() {
         String commandName;
         if (BukkitConfigyml.isCustomCommandEnabled() & !BukkitConfigyml.customCommandName().isEmpty()) {
@@ -58,11 +59,9 @@ public class BukkitConfigyml {
         }
     }
 
-    public static boolean dupingnothingmessage(Player player, Audience p) {
-        Component a = format(player, config.getString("dupe.duping-nothing-message", ""),
-                        Placeholder.component("prefix", getPrefix()));
+    public static void dupingnothingmessage(Player player, Audience p) {
+        Component a = format(player, config.getString("dupe.duping-nothing-message", ""), Placeholder.component("prefix", getPrefix()));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
-        return true;
     }
 
     public static boolean DupePermissionOption() {
@@ -72,9 +71,58 @@ public class BukkitConfigyml {
     public static boolean isDupeMessageEmpty() {
         return config.getString("dupe.message", "<prefix> <dark_gray>|</dark_gray> <gray>Duped <dupe_item></gray>").isEmpty();
     }
+
     public static boolean hasDupePermission(Player player) {
         return player.hasPermission("dupeplus.dupe");
     }
+
+    public static boolean isSoundFeedbackEnabled() {
+        return config.getBoolean("dupe.sound-feedback.enabled", false);
+    }
+
+    public static String soundFeedbackSoundValue() {
+        return config.getString("dupe.sound-feedback.sound", "minecraft:block.amethyst_block.chime");
+    }
+
+    public static Sound.Source soundFeedbackSoundCategory() {
+        String category = config.getString("dupe.sound-feedback.category", "master");
+        try {
+            return Sound.Source.valueOf(category.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return Sound.Source.MASTER;
+        }
+    }
+
+    public static Double soundFeedbackVolume() {
+        return config.getDouble("dupe.sound-feedback.volume", 1);
+    }
+
+    public static Double soundFeedbackPitch() {
+        return config.getDouble("dupe.sound-feedback.pitch", 1);
+    }
+
+    public static void playDupeSuccessfulSound(Audience p) {
+        String soundtoPlay = soundFeedbackSoundValue();
+        Sound.Source category = soundFeedbackSoundCategory();
+        float pitch = soundFeedbackPitch().floatValue();
+        float volume = soundFeedbackVolume().floatValue();
+
+        p.playSound(Sound.sound(Key.key(soundtoPlay), category, volume, pitch));
+    }
+
+    public static boolean soundFeedbackPermissionOption() {
+        return config.getBoolean("dupe.sound-feedback.permission", false);
+    }
+
+    public static boolean hasSoundFeedbackPermission(Player player) {
+        if (soundFeedbackPermissionOption()) {
+            return player.hasPermission("dupeplus.sound");
+        } else {
+            return true;
+        }
+    }
+
+
     public static ItemStack getDupedItem(Player player) {
         if (config.getString("dupe.dupe-on", "MainHand").equals("MainHand")) {
             return player.getInventory().getItemInMainHand();
@@ -97,10 +145,6 @@ public class BukkitConfigyml {
         config.set("dupe.list.blacklist", b);
     }
 
-    public static void setMax(boolean b) {
-        config.set("dupe.list.blacklist", b);
-    }
-
     public static List<Material> listedItems() {
         List<String> blacklistItemsSTR = config.getStringList("dupe.list.items");
         List<Material> blacklistedItems = new ArrayList<>();
@@ -119,7 +163,7 @@ public class BukkitConfigyml {
     public static boolean removeItemfromlistedItems(Material toRemove) {
         List<String> blacklistItemsSTR = config.getStringList("dupe.list.items");
 
-        String entry = "minecraft:" + toRemove.name().toLowerCase();
+        String entry = "minecraft:" + toRemove.name().toLowerCase(Locale.ROOT);
 
         boolean removed = blacklistItemsSTR.remove(entry);
         if (!removed) {
@@ -136,7 +180,7 @@ public class BukkitConfigyml {
 
     public static boolean addItemfromlistedItems(Material toAdd) {
         List<String> list = new ArrayList<>(config.getStringList("dupe.list.items"));
-        String entry = "minecraft:" + toAdd.name().toLowerCase();
+        String entry = "minecraft:" + toAdd.name().toLowerCase(Locale.ROOT);
 
         if (list.contains(entry)) {
             return false;
@@ -177,9 +221,11 @@ public class BukkitConfigyml {
         return false;
     }
 
+
     public static boolean timingsEnabled() {
         return config.getBoolean("dupe.times.enabled", false);
     }
+
     public static int timesMax(Player player) {
         ConfigurationSection maxValues = config.getConfigurationSection("dupe.times.max-values");
         if (maxValues == null) return 5;
@@ -195,22 +241,19 @@ public class BukkitConfigyml {
 
         return maxAllowed;
     }
+
     public static int timesMini() {
         return config.getInt("dupe.times.mini", 0);
     }
+
     public static boolean timesMaxMessage(Player player, Audience p) {
-        Component a = format(player, config.getString("dupe.times.max-message", "<prefix> <dark_gray>|</dark_gray> <red>This is above maximum! Do something lower than <max></red>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("max", String.valueOf(timesMax(player))),
-                Placeholder.unparsed("min", String.valueOf(timesMini())));
+        Component a = format(player, config.getString("dupe.times.max-message", "<prefix> <dark_gray>|</dark_gray> <red>This is above maximum! Do something lower than <max></red>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("max", String.valueOf(timesMax(player))), Placeholder.unparsed("min", String.valueOf(timesMini())));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
         return true;
     }
+
     public static boolean timesMiniMessage(Player player, Audience p) {
-        Component a = format(player, config.getString("dupe.times.min-message", "<prefix> <dark_gray>|</dark_gray> <red>This is lower than minimum! Do something higher than <min></red>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("max", String.valueOf(timesMax(player))),
-                Placeholder.unparsed("min", String.valueOf(timesMini())));
+        Component a = format(player, config.getString("dupe.times.min-message", "<prefix> <dark_gray>|</dark_gray> <red>This is lower than minimum! Do something higher than <min></red>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("max", String.valueOf(timesMax(player))), Placeholder.unparsed("min", String.valueOf(timesMini())));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
         return true;
     }
@@ -219,32 +262,32 @@ public class BukkitConfigyml {
     public static boolean hasTimesPermission(Player player) {
         return player.hasPermission("dupeplus.times");
     }
+
     public static boolean TimesNoPermission(@NotNull Player player, Audience p) {
-        Component a = format(player, config.getString("dupe.permission-message", "<prefix> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"),
-                Placeholder.component("prefix", getPrefix()));
+        Component a = format(player, config.getString("dupe.permission-message", "<prefix> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"), Placeholder.component("prefix", getPrefix()));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
         return true;
     }
+
     public static boolean TimesPermissionOption() {
         return config.getBoolean("dupe.times.permission", false);
     }
+
     public static boolean OneTimeMessage() {
         return config.getBoolean("dupe.times.one-time-message", true);
     }
+
     public static @NotNull boolean DupeMessage(Player player, Audience p) {
         ItemStack item = getDupedItem(player);
-        Component a = format(player, config.getString("dupe.message", "<prefix> <dark_gray>|</dark_gray> <gray>Duped <item_name> x<new_item_count></gray>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("item_name", itemStackName(item)),
-                Placeholder.unparsed("item_type", item.getType().name()),
-                Placeholder.unparsed("old_item_count", String.valueOf(item.getAmount())),
-                Placeholder.unparsed("new_item_count", String.valueOf(Math.min(item.getAmount() * 2, 64))));
+        Component a = format(player, config.getString("dupe.message", "<prefix> <dark_gray>|</dark_gray> <gray>Duped <item_name> x<new_item_count></gray>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("item_name", itemStackName(item)), Placeholder.unparsed("item_type", item.getType().name()), Placeholder.unparsed("old_item_count", String.valueOf(item.getAmount())), Placeholder.unparsed("new_item_count", String.valueOf(Math.min(item.getAmount() * 2, 64))));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
         return true;
     }
+
     public static @NotNull Component getPrefix() {
         return MiniMessage.miniMessage().deserialize(config.getString("dupe.prefix", "<green>DupePlus</green>"));
     }
+
     public static boolean DupeNoPermission(@NotNull Player player, Audience p) {
         Component a = format(player, config.getString("dupe.permission-message", "<prefix> <dark_gray>|</dark_gray> <red>You are not allowed to use this command</red>"), Placeholder.component("prefix", getPrefix()));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
@@ -253,11 +296,7 @@ public class BukkitConfigyml {
 
     public static boolean blockedmessage(@NotNull Player player, Audience p) {
         ItemStack item = getDupedItem(player);
-        Component a = format(player, config.getString("dupe.list.blocked-message", "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("item_name", itemStackName(item)),
-                Placeholder.unparsed("item_type", item.getType().name()),
-                Placeholder.unparsed("item_count", String.valueOf(item.getAmount())));
+        Component a = format(player, config.getString("dupe.list.blocked-message", "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("item_name", itemStackName(item)), Placeholder.unparsed("item_type", item.getType().name()), Placeholder.unparsed("item_count", String.valueOf(item.getAmount())));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
         return true;
     }
@@ -273,6 +312,7 @@ public class BukkitConfigyml {
 
     /**
      * If true then SpigotMC else it's Modrinth
+     *
      * @return boolean
      */
     public static boolean isSpigotMC() {
@@ -289,21 +329,13 @@ public class BukkitConfigyml {
 
     public static void updatePlayerMessage(@NotNull Player player, @NotNull String newversion, Audience p) {
         String link = isSpigotMC() ? "https://www.spigotmc.org/resources/dupeplus.110621/" : "https://modrinth.com/plugin/dupeplus";
-        Component a = format(player, config.getString("updates.notify.notify-message", "<prefix> <dark_gray>|</dark_gray> <white><green>DupePlus</green> is outdated, please update at: <blue><link></blue>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("link", link),
-                Placeholder.unparsed("currentversion", version),
-                Placeholder.unparsed("newversion", newversion));
+        Component a = format(player, config.getString("updates.notify.notify-message", "<prefix> <dark_gray>|</dark_gray> <white><green>DupePlus</green> is outdated, please update at: <blue><link></blue>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("link", link), Placeholder.unparsed("currentversion", version), Placeholder.unparsed("newversion", newversion));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
     }
 
     public static void updateConsoleMessage(@NotNull JavaPlugin plugin, @NotNull String newversion) {
         String link = isSpigotMC() ? "https://www.spigotmc.org/resources/dupeplus.110621/" : "https://modrinth.com/plugin/dupeplus";
-        String b = config.getString("updates.notify.console-notify-message", "%prefix% | Update DupePlus at %link%")
-                .replaceAll("%prefix%", MiniMessage.miniMessage().serialize(getPrefix()))
-                .replaceAll("%link%", link)
-                .replaceAll("%currentversion%", version)
-                .replaceAll("%newversion%", newversion);
+        String b = config.getString("updates.notify.console-notify-message", "%prefix% | Update DupePlus at %link%").replaceAll("%prefix%", MiniMessage.miniMessage().serialize(getPrefix())).replaceAll("%link%", link).replaceAll("%currentversion%", version).replaceAll("%newversion%", newversion);
         if (!(b.isEmpty())) plugin.getLogger().info(b);
     }
 
@@ -316,18 +348,28 @@ public class BukkitConfigyml {
         return config.getLong("dupe.cooldown.seconds", 3);
     }
 
+    public static boolean cooldownPermissionOption() {
+        return config.getBoolean("dupe.cooldown.permission", true);
+    }
+
+    public static boolean hasCooldownPermission(Player player) {
+        if (cooldownPermissionOption()) {
+            return player.hasPermission("dupeplus.cooldown");
+        } else {
+            return true;
+        }
+    }
+
     public static boolean Cooldownmessage(Audience p, Player player, String timeleft) {
-        Component a = format(player, config.getString("dupe.cooldown.wait-message", "<prefix> <dark_gray>|</dark_gray> <red>Please wait <duration>s.</red>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("duration", timeleft));
+        Component a = format(player, config.getString("dupe.cooldown.wait-message", "<prefix> <dark_gray>|</dark_gray> <red>Please wait <duration>s.</red>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("duration", timeleft));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
         return true;
     }
 
-    public static boolean customNBTItem(Player player, ItemStack item) {
-        if (NBTEditor.contains(item, NBTEditor.CUSTOM_DATA, "dupenotallowed")) {
-            return NBTEditor.getBoolean(getDupedItem(player), NBTEditor.CUSTOM_DATA, "dupenotallowed");
-        } else return false;
+    public static boolean customNBTItem(ItemStack item) {
+        return NBT.get(item, nbt -> {
+            return nbt.getBoolean("dupenotallowed");
+        });
     }
 
     private static String itemStackName(ItemStack itemStack) {
@@ -336,13 +378,11 @@ public class BukkitConfigyml {
     }
 
     private static String formatItemStackName(String dupeTypeName) {
-        String[] words = dupeTypeName.toLowerCase().split("_");
+        String[] words = dupeTypeName.toLowerCase(Locale.ROOT).split("_");
         StringBuilder dupeItem = new StringBuilder();
 
         for (String word : words) {
-            dupeItem.append(Character.toUpperCase(word.charAt(0)))
-                    .append(word.substring(1))
-                    .append(" ");
+            dupeItem.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
         }
 
         // Trim the extra space at the end
@@ -351,17 +391,25 @@ public class BukkitConfigyml {
 
     public static boolean customNBTItemMessage(Player player, Audience p) {
         ItemStack item = getDupedItem(player);
-        Component a = format(player, config.getString("dupe.custom-nbt-item.blocked-message", "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("item_name", itemStackName(item)),
-                Placeholder.unparsed("item_type", item.getType().name()),
-                Placeholder.unparsed("item_count", String.valueOf(item.getAmount())));
+        Component a = format(player, config.getString("dupe.custom-nbt-item.blocked-message", "<prefix> <dark_gray>|</dark_gray> <red>The item is blocked from being duped!</red>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("item_name", itemStackName(item)), Placeholder.unparsed("item_type", item.getType().name()), Placeholder.unparsed("item_count", String.valueOf(item.getAmount())));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
         return true;
     }
 
     public static boolean isLoreEnabled() {
-        return config.getBoolean("dupe.lore.enabled", true);
+        return config.getBoolean("dupe.lore.enabled", false);
+    }
+
+    public static boolean LorePermissionOption() {
+        return config.getBoolean("dupe.lore.permission", false);
+    }
+
+    public static boolean lorePermission(Player player) {
+        if (LorePermissionOption()) {
+            return player.hasPermission("dupeplus.lore");
+        } else {
+            return true;
+        }
     }
 
     public static boolean isShulkerBoxEnabled() {
@@ -378,8 +426,7 @@ public class BukkitConfigyml {
                 Inventory shulkerInventory = shulker.getInventory();
                 for (ItemStack i : shulkerInventory.getContents()) {
                     if (i == null) continue;
-                    // 1.21.2 and above only
-                    if (Tag.ITEMS_BUNDLES.isTagged(i.getType())) {
+                    if (isBundleItem(i.getType())) {
                         if (bundleBlacklist(i)) {
                             return true;
                         }
@@ -401,6 +448,11 @@ public class BukkitConfigyml {
             List<ItemStack> bundleItems = meta.getItems();
             for (ItemStack i : bundleItems) {
                 if (i == null) continue;
+                if (isBundleItem(i.getType())) {
+                    if (bundleBlacklist(i)) {
+                        return true;
+                    }
+                }
                 if (BukkitConfigyml.listedItems().contains(i.getType())) {
                     return true;
                 }
@@ -419,6 +471,7 @@ public class BukkitConfigyml {
     public static List<String> itemsadderNamespaces() {
         return config.getStringList("dupe.list.itemsadder-namespaces");
     }
+
     public static String getTextLore() {
         return PlainTextComponentSerializer.plainText().serialize(format(config.getString("dupe.lore.text", "<dark_red>*</dark_red> <red>Duplicated Item</red>")));
     }
@@ -493,16 +546,57 @@ public class BukkitConfigyml {
         return config.getStringList("dupe.worlds.worlds");
     }
 
-    public static boolean WorldBlockedMessage(Player player, Audience p) {
+    public static void WorldBlockedMessage(Player player, Audience p) {
         ItemStack item = getDupedItem(player);
-        Component a = format(player, config.getString("dupe.worlds.blocked-message", "<prefix> <red>The world is banned from using /dupe!</red>"),
-                Placeholder.component("prefix", getPrefix()),
-                Placeholder.unparsed("item_name", itemStackName(item)),
-                Placeholder.unparsed("item_type", item.getType().name()),
-                Placeholder.unparsed("item_count", String.valueOf(item.getAmount())),
-                Placeholder.unparsed("world", player.getWorld().getName()));
+        Component a = format(player, config.getString("dupe.worlds.blocked-message", "<prefix> <red>The world is banned from using /dupe!</red>"), Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("item_name", itemStackName(item)), Placeholder.unparsed("item_type", item.getType().name()), Placeholder.unparsed("item_count", String.valueOf(item.getAmount())), Placeholder.unparsed("world", player.getWorld().getName()));
         if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
-        return true;
+    }
+
+    public static void deductCurrency(Player player) {
+        EconomyResponse response = getEconomy().withdrawPlayer(player, economyPrice());
+        response.transactionSuccess();
+    }
+
+    public static void notEnoughCurrencyMessage(Player player, Audience p, double price) {
+        ItemStack item = getDupedItem(player);
+        Component a = format(player, config.getString("dupe.economy.not-enough-message", "<prefix> <red>You don't have enough currency to use /dupe!</red>"),
+                Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("price", String.valueOf(price)), Placeholder.unparsed("item_name", itemStackName(item)), Placeholder.unparsed("item_type", item.getType().name()), Placeholder.unparsed("item_count", String.valueOf(item.getAmount())));
+        if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
+    }
+
+    public static boolean isEconomyEnabled() {
+        return config.getBoolean("dupe.economy.enabled", false);
+    }
+
+    public static double economyPrice() {
+        return config.getDouble("dupe.economy.price", 25);
+    }
+
+    public static boolean hasEnoughCurrency(Player player, double price) {
+        return getEconomy().has(player, price);
+    }
+
+    public static boolean EconomyPermissionOption() {
+        return config.getBoolean("dupe.economy.permission", false);
+    }
+
+    public static boolean chargePerDupeEnabled() {
+        return config.getBoolean("dupe.economy.charge-per-dupe", true);
+    }
+
+    public static boolean hasBypassEconomyPermission(Player player) {
+        if (EconomyPermissionOption()) {
+            return player.hasPermission("dupeplus.bypasseconomy");
+        } else {
+            return false;
+        }
+    }
+
+    public static void successfulMessage(Player player, Audience p, double price) {
+        ItemStack item = getDupedItem(player);
+        Component a = format(player, config.getString("dupe.economy.successful-message", ""),
+                Placeholder.component("prefix", getPrefix()), Placeholder.unparsed("price", String.valueOf(price)), Placeholder.unparsed("item_name", itemStackName(item)), Placeholder.unparsed("item_type", item.getType().name()), Placeholder.unparsed("item_count", String.valueOf(item.getAmount())));
+        if (!(PlainTextComponentSerializer.plainText().serialize(a).isEmpty())) p.sendMessage(a);
     }
 
     public static Component format(Player player, String text, TagResolver... resolvers) {

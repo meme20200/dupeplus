@@ -1,7 +1,7 @@
-package net.meme20200.Bukkit.Commands;
+package net.meme20200.Bukkit.commands;
 
-import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
-import net.meme20200.Bukkit.Utilities.CooldownManager;
+import net.meme20200.Bukkit.utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.utilities.CooldownManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.meme20200.Bukkit.BukkitDupePlus.getPlugin;
-import static net.meme20200.Bukkit.Utilities.BukkitConfigyml.dupeAliases;
+import static net.meme20200.Bukkit.utilities.BukkitConfigyml.*;
+import static net.meme20200.Bukkit.utilities.UtilAPIs.isBundleItem;
 
 public class BukkitDupeCommand {
 
@@ -129,8 +130,7 @@ public class BukkitDupeCommand {
                         return;
                     }
                 }
-                // 1.21.2 and above only
-                if (BukkitConfigyml.isBundlesEnabled() && Tag.ITEMS_BUNDLES.isTagged(item.getType())) {
+                if (BukkitConfigyml.isBundlesEnabled() && isBundleItem(item.getType())) {
                     if (BukkitConfigyml.bundleBlacklist(item)) {
                         BukkitConfigyml.blockedmessage(player, p);
                         return;
@@ -154,21 +154,37 @@ public class BukkitDupeCommand {
 
         }
 
-        if (BukkitConfigyml.isCooldownEnabled() && player.hasPermission("dupeplus.cooldown")) {
+        if (BukkitConfigyml.isCooldownEnabled() && BukkitConfigyml.hasCooldownPermission(player)) {
             if (cooldownManager.hasCooldown(player.getUniqueId())) {
                 BukkitConfigyml.Cooldownmessage(p, player, formatDuration(cooldownManager.getRemainingCooldown(player.getUniqueId())));
                 return;
             }
         }
         if (BukkitConfigyml.isCustomNBTAllowed()) {
-            if (BukkitConfigyml.customNBTItem(player, item)) {
+            if (BukkitConfigyml.customNBTItem(item)) {
                 BukkitConfigyml.customNBTItemMessage(player, p);
                 return;
             }
         }
 
-        // Check if the time is enabled
         int times = context.getOrDefault("times", 0);
+        boolean economyEnabled_NoBypass_TimesEnabled = false;
+        if (BukkitConfigyml.isEconomyEnabled() && !BukkitConfigyml.hasBypassEconomyPermission(player)) {
+            if (BukkitConfigyml.timingsEnabled() && times != 0 && BukkitConfigyml.chargePerDupeEnabled()) {
+                economyEnabled_NoBypass_TimesEnabled = true;
+                if (!BukkitConfigyml.hasEnoughCurrency(player, BukkitConfigyml.economyPrice() * times)) {
+                    BukkitConfigyml.notEnoughCurrencyMessage(player, p, BukkitConfigyml.economyPrice() * times);
+                    return;
+                }
+            } else {
+                if (!BukkitConfigyml.hasEnoughCurrency(player, BukkitConfigyml.economyPrice())) {
+                    BukkitConfigyml.notEnoughCurrencyMessage(player, p, BukkitConfigyml.economyPrice());
+                    return;
+                }
+            }
+        }
+
+        // Check if the time is enabled
         if (BukkitConfigyml.timingsEnabled() && times != 0) {
 
             if (BukkitConfigyml.TimesPermissionOption()) {
@@ -207,10 +223,23 @@ public class BukkitDupeCommand {
                         BukkitConfigyml.DupeMessage(player, p);
                     }
                     dupe(player, item);
+                    if (economyEnabled_NoBypass_TimesEnabled) deductCurrency(player);
                 }
+
                 if (!(BukkitConfigyml.isDupeMessageEmpty()) &&
                         BukkitConfigyml.OneTimeMessage()) {
                     BukkitConfigyml.DupeMessage(player, p);
+                }
+
+                if (economyEnabled_NoBypass_TimesEnabled) {
+                    BukkitConfigyml.successfulMessage(player, p, economyPrice() * times);
+                    return;
+                } else {
+                    if (!BukkitConfigyml.chargePerDupeEnabled()) {
+                        deductCurrency(player);
+                        BukkitConfigyml.successfulMessage(player, p, economyPrice());
+                        return;
+                    }
                 }
 
                 if (BukkitConfigyml.isCooldownEnabled() && player.hasPermission("dupeplus.cooldown")) {
@@ -224,18 +253,24 @@ public class BukkitDupeCommand {
             }
         }
 
-
         if (!BukkitConfigyml.isDupeMessageEmpty()) {
             BukkitConfigyml.DupeMessage(player, p);
         }
         dupe(player, item);
-        if (BukkitConfigyml.isCooldownEnabled() && player.hasPermission("dupeplus.cooldown")) {
+        if (BukkitConfigyml.isCooldownEnabled() && BukkitConfigyml.hasCooldownPermission(player)) {
             cooldownManager.setCooldown(player.getUniqueId(), Duration.ofSeconds(BukkitConfigyml.cooldownSeconds()));
+        }
+        if (BukkitConfigyml.isSoundFeedbackEnabled() && BukkitConfigyml.hasSoundFeedbackPermission(player)) {
+            BukkitConfigyml.playDupeSuccessfulSound(p);
+        }
+        if (BukkitConfigyml.isEconomyEnabled() && !BukkitConfigyml.hasBypassEconomyPermission(player)) {
+            BukkitConfigyml.deductCurrency(player);
+            BukkitConfigyml.successfulMessage(player, p, economyPrice());
         }
     }
 
     private void dupe(Player player, ItemStack item) {
-        if (BukkitConfigyml.isLoreEnabled()) {
+        if (BukkitConfigyml.isLoreEnabled() && BukkitConfigyml.lorePermission(player)) {
             item = BukkitConfigyml.addLore(item);
         }
         player.getInventory().addItem(item);

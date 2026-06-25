@@ -9,7 +9,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.meme20200.Bukkit.Utilities.BukkitConfigyml;
+import net.meme20200.Bukkit.utilities.BukkitConfigyml;
 import net.meme20200.Bukkit.menus.BlocklistMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.meme20200.Bukkit.Utilities.UtilAPIs.getCustomSkull;
+import static net.meme20200.Bukkit.utilities.UtilAPIs.getCustomSkull;
 
 public class ItemListMenu {
     public PaginatedGui getMenu(Player player) {
