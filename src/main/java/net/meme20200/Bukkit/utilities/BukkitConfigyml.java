@@ -1,6 +1,5 @@
 package net.meme20200.Bukkit.utilities;
 
-import de.tr7zw.changeme.nbtapi.NBT;
 import dev.lone.itemsadder.api.CustomStack;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
@@ -367,9 +366,7 @@ public class BukkitConfigyml {
     }
 
     public static boolean customNBTItem(ItemStack item) {
-        return NBT.get(item, nbt -> {
-            return nbt.getBoolean("dupenotallowed");
-        });
+        return DupeBlockTag.isBlocked(item);
     }
 
     private static String itemStackName(ItemStack itemStack) {
