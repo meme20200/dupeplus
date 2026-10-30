@@ -1,6 +1,6 @@
 package net.meme20200.Bukkit.commands;
 
-import de.tr7zw.changeme.nbtapi.NBT;
+import net.meme20200.Bukkit.utilities.DupeBlockTag;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.meme20200.Bukkit.utilities.BukkitConfigyml;
 
@@ -177,15 +177,11 @@ public class BukkitDupePlusCommand {
     }
 
     private void undupeableItem(ItemStack itemStack) {
-        NBT.modify(itemStack, nbt -> {
-            nbt.setBoolean("dupenotallowed", true);
-        });
+        DupeBlockTag.block(itemStack);
     }
 
     private void dupeableItem(ItemStack itemStack) {
-        NBT.modify(itemStack, nbt -> {
-            nbt.removeKey("dupenotallowed");
-        });
+        DupeBlockTag.unblock(itemStack);
     }
 
 }

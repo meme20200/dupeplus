@@ -1,6 +1,6 @@
 package net.meme20200.Bukkit.menus.submenus;
 
-import de.tr7zw.changeme.nbtapi.NBT;
+import net.meme20200.Bukkit.utilities.DupeBlockTag;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
@@ -105,9 +105,7 @@ public class UnduplicatorMenu {
 
     private ItemStack processItem(Player player, ItemStack item) {
         if (!BukkitConfigyml.customNBTItem(item)) {
-            NBT.modify(item, nbt -> {
-                nbt.setBoolean("dupenotallowed", true);
-            });
+            DupeBlockTag.block(item);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.RECORDS,1f, 1f);
             return item;
         } else {
