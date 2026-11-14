@@ -1,0 +1,14 @@
+name: Suggestion
+description: 'Report any bugs or any issues you have found while using the DupePlus Plugin. '
+type: feature
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: suggestiondescription
+    attributes:
+      label: Suggestion Description
+      description: Explain your suggestion.
+      placeholder: Explain how your suggestion can help the plugin. It can even be a short explanation.
+    validations:
+      required: true

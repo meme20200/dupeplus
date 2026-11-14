@@ -7,33 +7,31 @@
           <value>
             <SchemaInfo>
               <option name="name" value="Bukkit plugin.yml" />
-              <option name="relativePathToSchema" value="https://json.schemastore.org/bukkit-plugin.json" />
+              <option name="relativePathToSchema" value="https://www.schemastore.org/bukkit-plugin.json" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
                 <list>
                   <Item>
-                    <option name="path" value="src/main/resources/plugin.yml" />
+                    <option name="path" value="bukkit/src/main/resources/plugin.yml" />
                   </Item>
                 </list>
               </option>
             </SchemaInfo>
           </value>
         </entry>
-        <entry key="No JSON schema">
+        <entry key="Paper paper-plugin.yml">
           <value>
             <SchemaInfo>
-              <option name="ignoredFile" value="true" />
-              <option name="name" value="No JSON schema" />
-              <option name="relativePathToSchema" value="" />
+              <option name="name" value="Paper paper-plugin.yml" />
+              <option name="relativePathToSchema" value="https://www.schemastore.org/paper-plugin.json" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
                 <list>
                   <Item>
-                    <option name="path" value="file://$PROJECT_DIR$/src/main/resources/META-INF/sponge_plugins.json" />
+                    <option name="path" value="bukkit/src/main/resources/paper-plugin.yml" />
                   </Item>
                 </list>
               </option>
-              <option name="isIgnoredFile" value="true" />
             </SchemaInfo>
           </value>
         </entry>
