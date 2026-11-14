@@ -1,0 +1,70 @@
+name: DupePlus
+main: net.meme20200.dupeplus.BukkitDupePlus
+version: '@version@'
+description: The only /dupe plugin you'll ever need
+author: Just_Galaxyy
+website: https://modrinth.com/plugin/dupeplus
+api-version: "1.20"
+folia-supported: true
+libraries:
+  - 'it.unimi.dsi:fastutil:@fastutilversion@'
+authors:
+  - meme20200 (Server)
+contributors:
+  - bobhenl
+bstats:
+  enabled: true
+  plugin-id: 18772
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+    Vault:
+      load: BEFORE
+      required: false
+permissions:
+  dupeplus.admin.*:
+    description: All admin permissions
+    default: op
+    children:
+      dupeplus.admin.reload: true
+      dupeplus.admin.blocklist: true
+      dupeplus.admin.block: true
+      dupeplus.admin: true
+  dupeplus.updates.notify:
+    description: Notifies the player of the latest update
+    default: op
+  dupeplus.admin.reload:
+    description: Allows the player to reload the configuration.
+    default: op
+  dupeplus.admin.blocklist:
+    description: Allows the player to open the blocklist menu
+    default: op
+  dupeplus.admin.block:
+    description: Allows the player to make the item undupeable
+    default: op
+  dupeplus.multiplier:
+    description: Allows the player to use the multiplier
+    default: true
+  dupeplus.multiplier.max.unlimited:
+    description: The player will have no max limit when using /dupe [multiplier]
+    default: false
+  dupeplus.multiplier.min.unlimited:
+    description: The player will have no min limit when using /dupe [multiplier]
+    default: false
+  dupeplus.dupe:
+    description: The player will be allowed to use /dupe
+    default: true
+  dupeplus.cooldown:
+    description: The player will need to wait a certain amount of seconds until the player can dupe.
+    default: true
+  dupeplus.lore:
+    description: Add/Set lore to the duplicated item
+    default: true
+  dupeplus.sound:
+    description: Plays a sound to the player whenever the player uses /dupe (Sound Feedback must be enabled in the config.yml)
+    default: true
+  dupeplus.bypasseconomy:
+    description: Bypasses the economy check
+    default: op

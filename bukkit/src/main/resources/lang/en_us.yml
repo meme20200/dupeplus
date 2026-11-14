@@ -1,0 +1,105 @@
+# Message Variables:
+# <item_type> = The Duplicated item
+# <item_name> = The Item's Display Name
+# <old_item_count> = The Item Count before dupe
+# <new_item_count> = The Item Count after dupe
+# <item_count> = Item Count
+# <prefix> = The default prefix or the prefix you set
+# <max> = The maximum
+# <min> = The minimum
+# <world> = The world name
+# <link> = Where you can download the new version
+# <currentversion> = The current version installed in the server.
+# <newversion> = The new version
+#
+# Use this website to help you customize your messages:
+# https://webui.advntr.dev
+
+# The prefix that is added before each message.
+prefix: "<green>DupePlus</green> <dark_gray>|</dark_gray>"
+
+# The message sent to the player when you duplicate an item. (Default: "<prefix> <gray>Duped <item_name></gray>")
+# Allowed Message Variables: <prefix>, <item_type>, <item_name>, <old_item_count>, <new_item_count>
+message: "<prefix> <gray>Duped <white><item_name></gray>"
+
+# The message sent to the player when try to execute dupe or reloadconfig no permission (Only if the above is true) (Default: "<prefix> <red>You are not allowed to use this command</red>")
+# Allowed Message Variables: <prefix>
+# Leave blank for no message
+permission-message: "<prefix> <red>You are not allowed to use this command</red>"
+
+# The message sent whenever the player tries to dupe nothing (Air) (Default: "")
+# Leave blank for no message
+nothing-message: ""
+
+multiplier:
+  # The message sent to the player when the multiplier is above the maximum (Default: "<prefix> <red>This is higher than maximum! Do something lower than <max></red>")
+  # Allowed message variable: <prefix>, <max>, <min>, <multiplier>
+  # Leave blank for no message
+  max-message: "<prefix> <red>This is higher than maximum! Do something lower than <max></red>"
+
+  # The message sent to the player when the value is below the minimum (Default: "<prefix> <red>This is lower than minimum! Do something higher than <min></red>")
+  # Allowed message variable: <prefix>, <max>, <min>, <multiplier>
+  # Leave blank for no message
+  min-message: "<prefix> <red>This is lower than minimum! Do something higher than <min></red>"
+
+  # The message sent to the player when they try to use the command without permission. (Default: "<prefix> <red>You are not allowed to use this command</red>")
+  # Allowed Message Variables: <prefix>
+  # Leave blank for no message
+  permission-message: "<prefix> <red>You are not allowed to use this command</red>"
+
+  # The message sent to the player when try to  (Default: "<prefix> <red>You cannot do that. Please use another value.</red>")
+  # Allowed Message Variables: <prefix>, <max>, <min>, <multiplier>
+  # Leave blank for no message
+  error-message: "<prefix> <red>You cannot do that. Please use another value.</red>"
+
+worlds:
+  # If the player tries to dupe in a blocked world. (Default: "<prefix> <red>The world is banned from using /dupe!</red>")
+  # Allowed message variable: <prefix>, <item_type>, <item_name>, <item_count>, <world>
+  # Leave blank for no message
+  blocked-message: "<prefix> <red>The world is banned from using /dupe!</red>"
+
+custom-nbt-item:
+  # Allowed message variable: <prefix>, <item_type>, <item_name>, <item_count> (Default: "<prefix> <red>The item is blocked from being duped!</red>")
+  # Leave blank for no message
+  blocked-message: "<prefix> <red>The item is blocked from being duped!</red>"
+
+filter:
+  # If the player tries to dupe an item which is in the filter blacklist or not in the filter whitelist (Default: "<prefix> <red>The item is blocked from being duped!</red>")
+  # Allowed message variable: <prefix>, <item_type>, <item_name>, <item_count>
+  # Leave blank for no message
+  blocked-message: "<prefix> <red>The item is blocked from being duped!</red>"
+
+cooldown:
+  # If the player tries to dupe while the cooldown is set. (Default: "<prefix> <red>Please wait <duration>.</red>")
+  # Allowed message variable: <prefix>, <duration>
+  # Leave blank for no message
+  wait-message: "<prefix> <red>Please wait <duration>.</red>"
+
+economy:
+  # The message sent to the player whenever the deduction was complete. (Can be silent) (Default: "")
+  # Allowed Message Variables: <prefix>, <price>, <item_type>, <item_name>, <item_count>
+  # Leave blank for no message
+  successful-message: ""
+
+  # The message sent to the player whenever they don't have enough currency to use /dupe. (Default: "<prefix> <red>You don't have enough currency to use /dupe!</red>")
+  # Leave blank for no message
+  # Allowed Message Variables: <prefix>, <price>, <item_type>, <item_name>, <item_count>
+  not-enough-message: "<prefix> <red>You don't have enough currency to use /dupe!</red>"
+
+# An admin command, used to block the held item from being duplicated.
+# /dupeblock, /dupeplus block
+block:
+  # Leave blank for no message
+  successful: "<prefix> <white>Successfully made your item undupeable!</white>"
+
+unblock:
+  successful: "<prefix> <white>Successfully made your item dupeable!</white>"
+
+notify:
+  # The message sent to everyone who has the permission (Default: "<prefix> <white><green>DupePlus</green> is outdated, please update at: <blue><link></blue>")
+  # (Permission: dupeplus.updates.notify)
+  # Allowed message variable: <prefix>, <link>, <currentversion>, <newversion>
+  # Leave blank for no message
+  notify-message: "<prefix> <white><green>DupePlus</green> is outdated, please update at: <blue><link></blue>"
+
+version: "1.5"
